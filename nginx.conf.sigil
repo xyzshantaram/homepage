@@ -115,6 +115,7 @@ server {
 
   location @public_html {
     root {{ var "PUBLIC_HTML_DIR" }};
+    add_header 'Access-Control-Allow-Origin' '*' always;
   }
 
   include {{ $.DOKKU_ROOT }}/{{ $.APP }}/nginx.conf.d/*.conf;
