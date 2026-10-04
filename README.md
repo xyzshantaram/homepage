@@ -58,10 +58,10 @@ that location.
 own shipped template plus a small patch:
 
 - `nginx.conf.sigil.patch` is a unified diff, the actual tracked source of
-  truth. It adds `proxy_intercept_errors` and a location-scoped
-  `error_page 404 = @public_html;` inside the proxied `location /` block,
-  and a new `location @public_html` block that serves from
-  `{{ var "PUBLIC_HTML_DIR" }}`, a dokku app config var (not a path
+  truth. It adds `proxy_intercept_errors`, `recursive_error_pages` and a
+  location-scoped `error_page 404 = @public_html;` inside the proxied
+  `location /` block, and a new `location @public_html` block that serves
+  from `{{ var "PUBLIC_HTML_DIR" }}`, a dokku app config var (not a path
   hardcoded in the file).
 - `scripts/generate-nginx-sigil.sh` fetches dokku's current template
   straight from tomato, applies the patch, and writes `nginx.conf.sigil`.
@@ -72,13 +72,24 @@ own shipped template plus a small patch:
 - `nginx.conf.sigil`, the generated result, is committed too, so a plain
   `git push dokku main` works without running the script first.
 
+`recursive_error_pages on;` is required, not cosmetic. `@public_html` is a
+named location, and nginx's `index` handling for a directory URI issues an
+internal redirect that re-enters `location /` (a named location is never
+re-matched by a normal internal redirect). That second pass reaches the
+proxied app, 404s again, and with recursion off (nginx's default) nginx
+refuses to re-apply `error_page` for the same request, returning its own
+default 404 instead. With recursion on, that second 404 falls back into
+`@public_html` and the directory's `index.html` is served. Plain files do
+not need it because they are served by `@public_html` on the first pass.
+
 One-time host setup, before the first push that uses this file:
 
 ```sh
 dokku config:set --no-restart homepage PUBLIC_HTML_DIR=/home/sid/public_html
 ```
 
-Test with three requests after a deploy: a homepage-native path (`/`)
-returns homepage content, a `public_html`-only path (for example
-`/important.html`) returns that file, and a path in neither returns a
-clean 404.
+Test with four requests after a deploy: a homepage-native path (`/`)
+returns homepage content, a `public_html`-only file (for example
+`/important.html`) returns that file, a `public_html`-only directory with
+its own `index.html` (for example `/poetry-photos/`) returns that page, and
+a path in neither returns a clean 404.
