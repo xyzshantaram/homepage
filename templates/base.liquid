@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Document{% endblock %}</title>
+    <link rel="stylesheet" href="/fieber.css" />
+    <link rel="stylesheet" href="/index.css" />
+  </head>
+  <body>
+    {% block content %}{% endblock %}
+
+    <footer>
+      <hr />
+      <nav>
+        <ul>
+          <li>
+            <a href="https://github.com/xyzshantaram">GitHub</a>
+          </li>
+
+          <li>
+            <a href="/services">Hire me</a>
+          </li>
+
+          <li>
+            <a href="/contact">Contact</a>
+          </li>
+        </ul>
+      </nav>
+    </footer>
+  </body>
+</html>

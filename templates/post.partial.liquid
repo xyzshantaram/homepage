@@ -1,0 +1,13 @@
+<div class="post-item">
+  <hr />
+  <h3 class="post-heading"><a href="{{ url }}">{{ title }}</a></h3>
+  <p>
+    {{ body }}
+  </p>
+  <div class="tag-row">
+    {% for tag in tags %}
+    <span class="tag">{{ tag }}</span>
+    {% endfor %}
+  </div>
+  <div class="post-date muted">{{ date }}</div>
+</div>

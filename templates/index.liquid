@@ -1,0 +1,33 @@
+{% layout "base.liquid" %}
+
+{% block content %}
+<h1>Hello</h1>
+<p>I'm shantaram.</p>
+
+<img src="./pfp-replaceme.jpg" alt="me" class="avatar" />
+
+<p>
+  I'm a maker and storyteller with 4+ years of full-stack web development.
+  My core belief is that software and systems should fit and work for
+  <em>people</em>, never the other way around.
+</p>
+
+<p>
+  My latest project is
+  <a href="https://trythursday.org">Thursday</a>.
+</p>
+
+<div class="post-heading-wrapper">
+  <h2 class="page-section">Posts</h2>
+  <div class="cta"><a href="/blog" class="muted">See all</a></div>
+</div>
+
+{% assign first_tags = "programming, ai" | split: ", " %}
+{% render "post.partial.liquid" title: "Sample Post 1" url: "#" date: "2026-10-15 19:43" body: "Dignissimos blanditiis facilis et. Dolore aliquid rerum quae. Illum repellendus a hic ratione. Enim magnam odit corrupti ratione pariatur molestias dolores dolor. Perspiciatis ducimus omnis occaecati fugit. Est impedit quasi dolor." tags: first_tags %}
+
+{% assign second_tags = "writing, notes" | split: ", " %}
+{% render "post.partial.liquid" title: "Sample Post 2" url: "#" date: "2026-10-14 09:12" body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris." tags: second_tags %}
+
+{% assign third_tags = "rust, tools" | split: ", " %}
+{% render "post.partial.liquid" title: "Sample Post 3" url: "#" date: "2026-10-12 21:05" body: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Duis aute irure dolor in reprehenderit in voluptate velit esse." tags: third_tags %}
+{% endblock %}

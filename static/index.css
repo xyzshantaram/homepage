@@ -1,0 +1,22 @@
+.post-heading-wrapper {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.post-heading-wrapper h2 {
+  margin: 0;
+}
+
+h3.post-heading {
+  margin: 2rem 0;
+}
+
+.post-date {
+  margin-top: 1rem;
+}
+
+.avatar {
+  max-height: 30ch;
+}
