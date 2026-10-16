@@ -174,7 +174,7 @@
                         id="contract-retainer"
                     >
                     <label for="contract-retainer"><strong>Retainer</strong> -
-                        get 20% off!</label>
+                        get 28.57% off!</label>
 
                     <input
                         type="radio"
@@ -203,7 +203,7 @@
                 </li>
                 <li>
                     While my standard pricing for international clients is
-                    $25/hour, if you're working toward a good cause or a
+                    $35/hour, if you're working toward a good cause or a
                     non-commercial project, feel free to reach out, and we can
                     find a rate that works for both of us.
                 </li>
@@ -314,8 +314,8 @@
                     : "$";
 
                 const BASE_RATES = {
-                    "$": 25,
-                    "₹": 2000,
+                    "$": 35,
+                    "₹": 3500,
                 };
 
                 const base = BASE_RATES[currency];
@@ -349,12 +349,13 @@
                     { min: 4, max: 7 };
 
                 let maintenance = -1;
-                const MAINT_HOURS = 4;
-                const RETAINER_RATE = 0.80;
+                // A fixed monthly fee, not a rate: 8 hours for ₹20,000 / $200
+                // works out to ₹2,500 / $25 an hour, 28.57% off the rack rate.
+                const MAINT_HOURS = 8;
+                const RETAINER_FEE = { "$": 200, "₹": 20000 };
                 switch (data.get("contract")) {
                     case "retainer":
-                        maintenance = MAINT_HOURS * base *
-                            RETAINER_RATE;
+                        maintenance = RETAINER_FEE[currency];
                         break;
                     case "rehire":
                         maintenance = 0;
@@ -375,12 +376,9 @@
                 }
                 if (maintenance > 0) {
                     mInfo =
-                        `${MAINT_HOURS} hours of monthly maintenance included at 
-        ${rate(RETAINER_RATE)}/hr = ${currency}${
-                            maintenance.toFixed(
-                                2,
-                            )
-                        } payable monthly.`;
+                        `${MAINT_HOURS} hours of monthly maintenance included at ` +
+                        `${currency}${(maintenance / MAINT_HOURS).toFixed(2)}/hr = ` +
+                        `${currency}${maintenance.toFixed(2)} payable monthly.`;
                 }
 
                 estimateHeading.style.display = "block";
