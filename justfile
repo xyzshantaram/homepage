@@ -7,11 +7,11 @@ _static := justfile_directory() / "static"
 default:
     @just --list
 
-# Build the image. fieber.css is fetched from the fork at build time.
+# Build the image.
 build:
     podman build -t {{_image}} .
 
-# Dev server on :3000. static/ is bind-mounted; fieber.css comes from the image.
+# Dev server on :3000. static/ is bind-mounted.
 dev:
     podman build -t {{_image}} .
     podman run --rm --name homepage-dev -p 0.0.0.0:3000:3000 \
@@ -22,7 +22,3 @@ dev:
 docker:
     podman build -t {{_image}} .
     podman run --rm --name homepage-docker -p 0.0.0.0:3001:3000 {{_image}}
-
-# Refetch fieber.css from the fork, bypassing the layer cache.
-fieber:
-    podman build --build-arg CACHEBUST=$(date +%s) -t {{_image}} .
