@@ -15,11 +15,11 @@ const SITE_URL = (process.env.SITE_URL ?? "https://shantaram.xyz").replace(
   /\/$/,
   "",
 );
-const TAGS = ["fiction", "musings", "technical", "projects"];
+const root = path.join(import.meta.dir, "..");
 
 const app = new Hono();
 const liquid = new Liquid({
-  root: [path.join(import.meta.dir, "templates")],
+  root: [path.join(root, "templates")],
   extname: ".liquid",
 });
 
@@ -32,11 +32,14 @@ app.get("/", async (c) => {
 
 app.get("/posts", async (c) => {
   const all = (await posts.list()).filter((post) => !post.hidden);
+  const availableTags = [...new Set(all.flatMap((post) => post.tags))].sort(
+    (a, b) => a.localeCompare(b),
+  );
   const params = new URL(c.req.url).searchParams;
   const selected = (params.get("tags") ?? "")
     .split(",")
     .map((tag) => tag.trim())
-    .filter((tag) => TAGS.includes(tag));
+    .filter((tag) => availableTags.includes(tag));
 
   const filtered = selected.length
     ? all.filter((post) => post.tags.some((tag) => selected.includes(tag)))
@@ -58,7 +61,7 @@ app.get("/posts", async (c) => {
     return parts.length ? `/posts?${parts.join("&")}` : "/posts";
   };
 
-  const tagLinks = TAGS.map((name) => {
+  const tagLinks = availableTags.map((name) => {
     const isSelected = selected.includes(name);
     const next = isSelected
       ? selected.filter((tag) => tag !== name)
@@ -171,6 +174,6 @@ async function serveFeed(c: Context) {
 app.get("/blog/feed.rss", serveFeed);
 app.get("/feed.rss", serveFeed);
 
-app.use("/*", serveStatic({ root: path.join(import.meta.dir, "static") }));
+app.use("/*", serveStatic({ root: path.join(root, "static") }));
 
 export default app;

@@ -52,6 +52,7 @@
 - fieber fork: explicit palette, no system colors, flat kbd/meters, .surface, .content, .table-wrapper, showcase at index.html
 - commits: homepage b3c114c on next (one ahead of origin), posts bbffed7 (pushed), fieber 8c076dc (pushed)
 - RSS feed built and tested
+- Comments built and tested
 - blog posts we have
   - visible:
 
@@ -100,14 +101,7 @@ worktree
   - deploy: fixed Dockerfile, posts baked or mounted, nginx/redirect map
   - git/webhook for compose is also a v1 target. the idea is to make it easy for me to post by
     building a complete if feature-light website now, not make it something we engineer forever.
-- comments, stolen from Writers Jam
-  - table: comment(id ULID, for post, content, author, posted), append-only
-  - zod schema: for, non-empty content, author max 40, non-empty captcha
-  - Same exact UX - replies should be markdown quotes, should render markdown (Can do it server side, strip HTML, store the HTML'd, html-sanitize'd comment)
-  - Cap server: new Cap({ tokens_store_path }); validateToken; createChallenge / redeemChallenge
-- routes: POST /api/v1/captcha/challenge, POST /api/v1/captcha/redeem (unless cap.js client does not allow), POST /posts/{year}/{month}/{slug}/comment
-- client: <script src="https://cdn.jsdelivr.net/npm/@cap.js/widget"> and <cap-widget data-cap-api-endpoint="/captcha/"
-data-cap-hidden-field-name="captcha">
+
 - limits: 1 comment per minute per IP+path; 5 captcha calls per 10s
 - SQLite location: also in docker volume (storage:create with dokku)
 - Moderation: should be able to copy comment id and push to posts branch maybe? 

@@ -5,3 +5,6 @@ todo
 README.md
 Dockerfile
 .dockerignore
+node_modules
+scratch
+data

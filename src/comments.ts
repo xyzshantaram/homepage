@@ -11,16 +11,20 @@ mkdirSync(dirname(resolve(dbPath)), { recursive: true });
 
 const db = new Database(dbPath, { create: true });
 
-db.exec(`
-  PRAGMA journal_mode = WAL;
+db.run("PRAGMA journal_mode = WAL");
+
+db.run(`
   CREATE TABLE IF NOT EXISTS comment (
     id TEXT PRIMARY KEY,
     "for" TEXT NOT NULL,
     content TEXT NOT NULL,
     author TEXT NOT NULL DEFAULT '',
     posted INTEGER NOT NULL
-  );
-  CREATE INDEX IF NOT EXISTS comment_for_posted ON comment ("for", posted);
+  )
+`);
+
+db.run(`
+  CREATE INDEX IF NOT EXISTS comment_for_posted ON comment ("for", posted)
 `);
 
 export type Comment = {
