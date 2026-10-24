@@ -2,6 +2,9 @@
 title: "imperfect dream"
 description: "a short story about a drive to the airport."
 date: 2022-06-23
+created-date: 2022-06-23
+tags:
+  - fiction
 ---
 
 I wondered if I should say something as the airport drew nearer. The small smile
@@ -78,7 +81,7 @@ face in my hands as I cried. I pulled at the box of tissues you had on the dash,
 and got a couple to wipe my face with. They weren't enough, and I went back for
 a couple more.
 
-"I'm sorry I'm using up - _\*sob\*_ - your - _\*hiccup\*_ - expensive tissues."
+"I'm sorry I'm using up - *\*sob\** - your - *\*hiccup\** - expensive tissues."
 I managed to laugh weakly, and you laughed with me.
 
 I reached for the little bottle of water in the side of the door. Our day of

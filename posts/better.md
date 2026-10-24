@@ -2,6 +2,9 @@
 title: "A Better Place"
 description: "a short story about a cab ride."
 date: 2020-12-14
+created-date: 2020-12-14
+tags:
+  - fiction
 ---
 
 “Bye. See you soo-- I mean, um, nice to meet you…” I fumbled, as I got ready to
@@ -23,7 +26,7 @@ It had all started an hour earlier, when my math tuition ended.
 
 My tutor sighed, and I thought I could sense a little disappointment. I'd gotten
 used to disappointing people. "Ooookay. We're done for the day. Next time, I'd
-like you to finish _all_ of your homework. And I want you do it patiently, with
+like you to finish *all* of your homework. And I want you do it patiently, with
 focus, or there's no point... it was filled with mistakes."
 
 "Yes, sir. Sorry." No matter how hard I tried I'd always seem to get stuck at
@@ -151,32 +154,28 @@ how much it helped.
 I wish I could tell you my smashing success story and say that I made it into
 the best IIT or something, but no. I’m at a regular old uni, nothing to write
 home about, although I’ve met some wonderful people and had some wonderful
-experiences here. However… I made it _somewhere_, and I don’t think I would have
+experiences here. However… I made it *somewhere*, and I don’t think I would have
 pushed on until here without him.
 
 And for this I am grateful.
 
-[^1]:
-    The conversation seems mechanical, but this is in part because I was
+[^1]: The conversation seems mechanical, but this is in part because I was
     extremely awkward at the time, in part due to my not being able to remember
     it that well, and in part due to my poor writing ability.
 
-[^2]:
-    In my opinion the fascination with the English language and foreigners in
+[^2]: In my opinion the fascination with the English language and foreigners in
     general that Indians (especially those of the working class) have is an
     effect of post colonialism, and it’s regarded as the ticket (or maybe the
     minimum prerequisite) to a better life, and it's a big deal to be able to
     provide this for your child.
 
-[^3]:
-    An Indian Institute of Technology is one of a series of government-operated
-    and owned technological universities - the best in India. Getting in is
-    extremely hard, requiring one to clear two progressively harder exams
-    consisting of physics, chemistry, and math questions, and a coveted feat. 9
-    million candidates appeared in 2020, competing for only about 15 thousand
-    seats.
+[^3]: An Indian Institute of Technology is one of a series of
+    government-operated and owned technological universities - the best in
+    India. Getting in is extremely hard, requiring one to clear two
+    progressively harder exams consisting of physics, chemistry, and math
+    questions, and a coveted feat. 9 million candidates appeared in 2020,
+    competing for only about 15 thousand seats.
 
-[^4]:
-    “See you soon” (literally, “I’ll go and come back”) is a common Tamil
+[^4]: “See you soon” (literally, “I’ll go and come back”) is a common Tamil
     expression and the preferred alternative to simply saying “I’m leaving” as
     it implies the speaker will live to come back.

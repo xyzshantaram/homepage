@@ -3,6 +3,10 @@ title:
   "Five months and five thousand kilometers with the Royal Enfield Bullet (2022)"
 description: "a review of my motorcycle"
 date: 2023-02-05
+created-date: 2023-02-05
+tags:
+  - musings
+  - technical
 ---
 
 > Riding a motorcycle is velocity as poetry. The fine balance between elegant
@@ -11,15 +15,15 @@ date: 2023-02-05
 > stuttering flow of time, and space, and purpose. Coursing on those wheels, on
 > that river of air, in that flight of freed spirit there’s no attachment, no
 > fear, no joy, no hatred, no love, and no malice: the nearest thing, for some
-> violent men, for this violent man, to a state of grace.  
-> — Gregory David Roberts, _Shantaram_
+> violent men, for this violent man, to a state of grace.\
+> — Gregory David Roberts, *Shantaram*
 
 The odometer on my motorcycle ticks over to 1580 kilometers. I check my watch
-for the time, and the grey readout on the LCD reports that it is 6:32 am. _Damn,
-has it really only been twenty minutes?_
+for the time, and the grey readout on the LCD reports that it is 6:32 am. *Damn,
+has it really only been twenty minutes?*
 
 Ah, the steady rattle of a motorcycle between my legs, a full tank of gas, and
-the wide open road before me. _This_ is life.
+the wide open road before me. *This* is life.
 
 I've been afraid to write this post for a long time. I find that all
 motorcyclists arrive at the same conclusions about motorcycling, and it makes us
@@ -37,8 +41,8 @@ you find that sort of thing unbearable, click away now.
 > sisters of our respective friends and acquantainces, a dealer agreed to hire
 > out an Enfield Bullet motorcycle for a reasonable rental. I paid a bond and a
 > week's rent in advance, kick-started the bike, and set off through the
-> market's maul toward the beaches.  
-> — Gregory David Roberts, _Shantaram_
+> market's maul toward the beaches.\
+> — Gregory David Roberts, *Shantaram*
 
 Before January of 2022, the thought of getting a motorcycle hadn't really
 crossed my mind much at all. It seemed a faraway dream, to one day emulate my
@@ -72,11 +76,13 @@ costs. My friend (the very same fellow from the previous paragraph) put the idea
 of a Royal Enfield in my head, and the hunt was on. I went on the RE website and
 saw the following picture:
 
-![Royal Enfield promotional image of the Bullet. Ever notice how all of these images have the mirrors missing? I can't unsee it anymore.](https://shantaram.xyz/blog/bullet/re.webp)
+![Royal Enfield promotional image of the Bullet. Ever notice how all of these
+images have the mirrors missing? I can't unsee it
+anymore.](https://shantaram.xyz/blog/bullet/re.webp)
 
 I took one look at it and knew it had to be mine. What a beautiful motorcycle. I
 began looking into it, and quickly realised that the Bullet, while a legendary
-motorcycle, kind of sucked at being a motorcycle in _2022_.
+motorcycle, kind of sucked at being a motorcycle in *2022*.
 
 Here's some stuff that put me off:
 
@@ -110,7 +116,7 @@ Here's some stuff that put me off:
   and destruction.
 
 All of this led to me looking into other Royal Enfield models (I'd decided it
-_had_ to be a Royal Enfield for no particular reason. Potentially because it's
+*had* to be a Royal Enfield for no particular reason. Potentially because it's
 an Indian culture thing.)
 
 I had things narrowed down to the Meteor and Himalayan. The Himalayan scared me
@@ -128,7 +134,7 @@ It's sort of become the forgotten sibling, which is sad, but there's still a lot
 of love and fond memories for these bikes. In fact, I'm sure if I'd gotten a
 Classic or a Meteor I wouldn't get as many admiring looks from people as I do.
 And it's kind of funny, people here refer to all Enfield motorcycles as Bullets,
-to the point that people squint and ask what _specific_ motorcyle I mean when I
+to the point that people squint and ask what *specific* motorcyle I mean when I
 say I ride a Bullet. It's kind of sad, honestly - the Bullet is the ignored
 step-child of the RE family, when it's the bike that started it all, but the
 awe-inspiring part is that the Bullet has enough love for it that it doesn't
@@ -138,16 +144,16 @@ Indian dad is a formidable force to deal with.
 
 Anyway, for fun, here's a tabular comparison of the two bikes.
 
-| Features ↓         | Meteor                                                                                                                                                                                                                | Bullet                                                                                                                                          |
-| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| Kerb weight        | 191 kg                                                                                                                                                                                                                | 191 kg                                                                                                                                          |
-| Brakes             | Front and rear discs with dual-channel ABS as standard                                                                                                                                                                | Front disc brake with ABS, rear drum                                                                                                            |
+| Features ↓ | Meteor | Bullet |
+|----|----|----|
+| Kerb weight | 191 kg | 191 kg |
+| Brakes | Front and rear discs with dual-channel ABS as standard | Front disc brake with ABS, rear drum |
 | Instrument cluster | Split LCD-analog cluster with speed, odo, 2 trip meters, fuel gauge accurate to 3L, service reminder, battery warning light, clock, gear position indicator, neutral light, indicator indicators, Tripper nav console | Analog cluster with speed, odo, fuel warning light (comes on when around 4 liters is left in the tank), neutral light, single blinker indicator |
-| Hazard lights      | Yes                                                                                                                                                                                                                   | No                                                                                                                                              |
-| USB power socket   | Yes, 10W                                                                                                                                                                                                              | No                                                                                                                                              |
-| Wheels/Tyres       | Tubeless alloys, 100/90 R19 front, 140/70 R17 rear                                                                                                                                                                    | Tubed spoked wheels, 3.25x19 - 54P front, 3.25x19 - 60P rear                                                                                    |
-| Looks              | Weird Harley-clone looking thing                                                                                                                                                                                      | Cool uncle motorcycle                                                                                                                           |
-| Sentiment          | Fucking upstart little bike                                                                                                                                                                                           | 90 years of lovesick movie heroes and stories from your father                                                                                  |
+| Hazard lights | Yes | No |
+| USB power socket | Yes, 10W | No |
+| Wheels/Tyres | Tubeless alloys, 100/90 R19 front, 140/70 R17 rear | Tubed spoked wheels, 3.25x19 - 54P front, 3.25x19 - 60P rear |
+| Looks | Weird Harley-clone looking thing | Cool uncle motorcycle |
+| Sentiment | Fucking upstart little bike | 90 years of lovesick movie heroes and stories from your father |
 
 So I ended up booking a Meteor. I was told the lead time on a bike would be two
 months... Fine, whatever, I'd be in college for that time anyway, and I'd get it
@@ -200,7 +206,7 @@ We had lunch and I went home.
 The list I put above is frighteningly long, but the bike really isn't as bad as
 it seems on paper. I know it sounds criminally stupid to get an objectively
 worse bike, but specs are all made up numbers anyway - get the bike which makes
-you happy. The only number you should care about is ~the horsepower~ the miles
+you happy. The only number you should care about is ~~the horsepower~~ the miles
 of smiles.
 
 By the way, I'll address all of those complaints in a bit, but I'll preface that
@@ -212,7 +218,7 @@ coaxing it might go a bit faster, but I suspect foul play here (rev limiter).
 More on that in the mods section.
 
 The ride, though, is grand–it's an incredibly comfortable, well-built cruiser,
-with plenty of power for _most_ situations (see above.) The suspension is plush
+with plenty of power for *most* situations (see above.) The suspension is plush
 and EATS your average Indian pothole, and contrary to popular belief, refinement
 is top-class. While the bike does certainly vibrate a bit at higher rpms, there
 seems to be a rev range it's most comfortable at in every gear, where vibrations
@@ -232,7 +238,9 @@ addition of an ECU), and I can almost hear all those memoir-writing
 motorcyclists calling me a pussy when my feet go numb from continuously riding
 at 5k rpm.
 
-![A random shot of the bike. To borrow a phrase from the Himalayan's marketing, built for all roads, built for no roads.](https://shantaram.xyz/blog/bullet/Random.webp)
+![A random shot of the bike. To borrow a phrase from the Himalayan's marketing,
+built for all roads, built for no
+roads.](https://shantaram.xyz/blog/bullet/Random.webp)
 
 As for the laundry list of complaints above, here's how my fears were allayed.
 
@@ -293,8 +301,8 @@ eccentricities... I'll let GDR take it from here:
 > relationship with its rider. That relationship involved tolerance, patience,
 > and understanding on the part of the rider. In exchange, the Bullet provided
 > the kind of soaring, celestial, wind-weaving pleasure that birds must know,
-> punctuated by not infrequent near-death experiences.  
-> — Gregory David Roberts, _Shantaram_
+> punctuated by not infrequent near-death experiences.\
+> — Gregory David Roberts, *Shantaram*
 
 ### Mods (planned and current)
 
@@ -324,7 +332,8 @@ Stuff I've added:
   taller.
 - Side saddlebag - The Bullet has no storage anywhere, save for the fuse box
   which has about enough space for a pack of cigarettes and no more. I added a
-  [20L saddlebag from Guardian Gears (not sponsored)](https://guardiangears.in/collections/saddle-bags/products/buddy-single-side-canvas-bag-olive-green).
+  [20L saddlebag from Guardian Gears (not
+  sponsored)](https://guardiangears.in/collections/saddle-bags/products/buddy-single-side-canvas-bag-olive-green).
 - Fog lamps - Two small yellow LED fog lamps. They do their job, no complaints.
 - New headlamp - I replaced the headlight dome with a new assembly with LED
   lamps. It definitely performs better than stock, but I am torn on the looks.
@@ -342,7 +351,7 @@ Stuff I've added:
   about all article with new ones. The tread patterns on the new tyres are so
   much nicer than the old ones, and the wider tyre leads to waaay better braking
   and skid protection.
-- Double horn setup - The Bullet comes with an _adequate_ horn, but we don't
+- Double horn setup - The Bullet comes with an *adequate* horn, but we don't
   settle for that in this house - I got two slightly smaller horns and wired
   them up with a relay to soothe my ego.
 - Fixed footrest (bent in an accident, the replacement part was three hundred
@@ -400,7 +409,8 @@ driving, and kind of sucked at it, but everyone assured me I was doing great and
 to not get too dejected. (Jayant, if you're reading this, you're awesome. Thanks
 for everything.) I think I've gotten better since then.
 
-![Posing on the beach at Alamparai Fort, on my friend's INT650](https://shantaram.xyz/blog/bullet/Alamparai1.webp)
+![Posing on the beach at Alamparai Fort, on my friend's
+INT650](https://shantaram.xyz/blog/bullet/Alamparai1.webp)
 
 There's really nothing quite like it. And there's almost nothing to it, that
 magic in group rides - it comes from the love of motorcycling, a bunch of people
@@ -411,38 +421,42 @@ surrounding these bikes in India is insane.
 In no particular order, here are some of the rides I've been on, solo and group:
 
 - Alamparai Fort (230 kms) The scenic ruins of a French fort, now just a beach,
-  really. My first "long" trip.
-
-  ![Breakfast stop during that trip. It just so happened that I'd parked last, so we get this awesome glory shot of my bike.](https://shantaram.xyz/blog/bullet/Alamparai2.webp)
+  really. My first "long" trip. ![Breakfast stop during that trip. It just so
+  happened that I'd parked last, so we get this awesome glory shot of my
+  bike.](https://shantaram.xyz/blog/bullet/Alamparai2.webp)
 
 - Kollidam (about 500 kms total) - A two-day camping/kayaking trip. We slept in
   tents under the unpolluted rural skies, kayaked in the backwaters, and had a
   ton of fun (there may have been drinking involved that first night.) That trip
   resulted in some really great friendships, too, and it was overall entirely
-  delightful.
-
-  ![A photo I took soon after we arrived.](https://shantaram.xyz/blog/bullet/Kollidam4.webp)
+  delightful. ![A photo I took soon after we
+  arrived.](https://shantaram.xyz/blog/bullet/Kollidam4.webp)
 
   ![Backwater background.](https://shantaram.xyz/blog/bullet/Kollidam1.webp)
 
   ![Parked near our tents.](https://shantaram.xyz/blog/bullet/Kollidam2.webp)
 
-  ![The same shot from behind.](https://shantaram.xyz/blog/bullet/Kollidam3.webp)
+  ![The same shot from
+  behind.](https://shantaram.xyz/blog/bullet/Kollidam3.webp)
 
 - Pondicherry (400 kms) - Didn't feel so good one night, decided to ride to
   Pondicherry. Went to the beach, drank tea. 10/10, would do again.
+
 - Bangalore solo (about 850 kms) - What it sounds like. I'd been working up the
   courage to do a solo trip for a while, and I settled on Bangalore as my
   destination of choice. I caught up with a couple of people from high school,
   met my aunt, explored this set of hills called Nandi Hills - overall a great
-  trip.
+  trip. ![Stopped at Vellore Fort on the way. The first time I'd had the freedom
+  to make that kind of stop. It was really weird knowing it was entirely my trip
+  and I didn't have anyone to answer to or any plan to keep
+  up.](https://shantaram.xyz/blog/bullet/VelloreFort.webp)
 
-  ![Stopped at Vellore Fort on the way. The first time I'd had the freedom to make that kind of stop. It was really weird knowing it was entirely my trip and I didn't have anyone to answer to or any plan to keep up.](https://shantaram.xyz/blog/bullet/VelloreFort.webp)
-
-  ![A photo I took along the way.](https://shantaram.xyz/blog/bullet/Bangalore1.webp)
+  ![A photo I took along the
+  way.](https://shantaram.xyz/blog/bullet/Bangalore1.webp)
 
   ![Nandi Hills](https://shantaram.xyz/blog/bullet/Bangalore2.webp)
 
+  \
   **Accident** - This trip also contained the first (major, there've been a
   couple of drops at low speeds but nothing too bad) accident I've had - I went
   over a (in my defense, unmarked) speed breaker, skidded and dropped the bike.
@@ -481,7 +495,7 @@ can be a kind of involved habit. I get checked out on my bike all the time,
 which is definitely a nice feeling, and they always have a question or two to
 ask about my (admittedly peculiar) setup.
 
-Services, too, have been _okay_ - they could have been better, but I have never
+Services, too, have been *okay* - they could have been better, but I have never
 left a service center wanting for something, either. The service staff here at
 the two Royal Enfield company-operated service centers in my city are polite and
 helpful, if severely overworked. I feel like these are just growing pains for
@@ -500,5 +514,5 @@ the longing for that sense of freedom, and I implore you to go find it, whether
 it's on a 125cc commuter, an 883cc Harley Sportster, or the humble Royal Enfield
 Bullet 350.
 
-If you liked this article, or just like bikes in general, consider
-[emailing me](https://shantaram.xyz/contact/) and we can have a chat!
+If you liked this article, or just like bikes in general, consider [emailing
+me](https://shantaram.xyz/contact/) and we can have a chat!

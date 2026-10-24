@@ -1,6 +1,10 @@
 ---
 title: "Writers Jam"
 description: "a weekly writing exercise and anti-social network"
+created-date: 2025-07-12
+tags:
+  - musings
+  - projects
 ---
 
 Writers Jam was a writing exercise I started in 2025 and continued
