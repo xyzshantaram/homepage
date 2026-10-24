@@ -16,4 +16,83 @@
 <div class="post-body content">
 {{ body }}
 </div>
+
+<section id="comments" class="comments">
+  <h2>Comments</h2>
+
+  <h3>Leave a comment</h3>
+  <form class="comment-form" method="post" action="{{ url }}/comment">
+    <div class="comment-name-row">
+      <label for="comment-author">Name</label>
+      <input
+        id="comment-author"
+        name="author"
+        maxlength="40"
+        placeholder="Anonymous"
+      />
+    </div>
+
+    <div class="comment-text-row">
+      <label for="comment-content">Comment</label>
+      <textarea
+        id="comment-content"
+        name="content"
+        required
+        placeholder="Leave your thoughts! Markdown is supported."
+      ></textarea>
+    </div>
+
+    <cap-widget
+      id="cap"
+      data-cap-api-endpoint="/api/v1/captcha/"
+      data-cap-hidden-field-name="captcha"
+    ></cap-widget>
+
+    <button type="submit" class="outlined">Post</button>
+  </form>
+
+  {% for comment in comments %}
+  <article class="comment surface" id="comment-{{ comment.id }}">
+    <div class="comment-meta">
+      <span class="comment-author">{{ comment.author | default: "Anonymous" | escape }}</span>
+      <span class="comment-actions">
+        <button type="button" class="comment-reply">Reply</button>
+        <time class="muted" datetime="{{ comment.postedIso }}">{{ comment.postedAgo }}</time>
+      </span>
+    </div>
+    <div class="comment-body">{{ comment.content }}</div>
+  </article>
+  {% endfor %}
+
+  {% if comments.size == 0 %}
+  <p class="muted">No comments yet. Be the first to leave one.</p>
+  {% endif %}
+</section>
+
+<script>
+  document.querySelectorAll(".comment").forEach((comment) => {
+    const button = comment.querySelector(".comment-reply");
+    const author =
+      comment.querySelector(".comment-author")?.textContent?.trim() ||
+      "Anonymous";
+    const body = comment.querySelector(".comment-body")?.innerText?.trim() || "";
+
+    button?.addEventListener("click", () => {
+      const textarea = document.querySelector("#comment-content");
+      if (!textarea) return;
+
+      const quoted = `> **_@${author}_** wrote:  \n${body
+        .split("\n")
+        .map((line) => `> ${line}`)
+        .join("\n")}\n\n`;
+
+      textarea.value = textarea.value.trim()
+        ? `${textarea.value}\n${quoted}`
+        : quoted;
+      textarea.focus();
+      textarea.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+  });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@cap.js/widget"></script>
 {% endblock %}

@@ -7,6 +7,11 @@
   <div class="cta"><a href="/" class="muted">Back to home</a></div>
 </div>
 
+<p class="muted">
+  Subscribe to the <a href="/blog/feed.rss">RSS feed</a> to stay updated on my
+  latest posts.
+</p>
+
 <div class="tag-row tag-filter-buttons">
   {% for tag in tagLinks %}
   <a class="tag{% unless tag.selected %} outlined{% endunless %}" href="{{ tag.href }}">{{ tag.name }}</a>
