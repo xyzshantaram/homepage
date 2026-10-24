@@ -1,0 +1,31 @@
+{% layout "base.liquid" %}
+{% block title %}Posts{% endblock %}
+
+{% block content %}
+<div class="post-heading-wrapper">
+  <h1>Posts</h1>
+  <div class="cta"><a href="/" class="muted">Back to home</a></div>
+</div>
+
+<div class="tag-row tag-filter-buttons">
+  {% for tag in tagLinks %}
+  <a class="tag{% unless tag.selected %} outlined{% endunless %}" href="{{ tag.href }}">{{ tag.name }}</a>
+  {% endfor %}
+</div>
+
+{% for post in posts %}
+{% render "post.partial.liquid" title: post.title url: post.url description: post.description tags: post.tags date: post.createdDate %}
+{% endfor %}
+
+{% if posts.size == 0 %}
+<p class="muted">No posts for this filter.</p>
+{% endif %}
+
+{% if pages > 1 %}
+<nav class="pagination">
+  {% if prevUrl %}<a href="{{ prevUrl }}">Previous</a>{% endif %}
+  <span class="muted">Page {{ page }} of {{ pages }}</span>
+  {% if nextUrl %}<a href="{{ nextUrl }}">Next</a>{% endif %}
+</nav>
+{% endif %}
+{% endblock %}

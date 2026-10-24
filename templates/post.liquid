@@ -1,0 +1,19 @@
+{% layout "base.liquid" %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<h1>{{ title }}</h1>
+<p class="cta"><a href="/posts" class="muted">Back to posts</a></p>
+
+<div class="tag-row">
+  {% for tag in tags %}
+  <a class="tag" href="/posts?tags={{ tag | url_encode }}" target="_blank" rel="noopener">{{ tag }}</a>
+  {% endfor %}
+</div>
+
+<div class="post-date muted">{{ createdDate }}</div>
+
+<div class="post-body">
+{{ body }}
+</div>
+{% endblock %}

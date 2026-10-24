@@ -1,11 +1,11 @@
 <div class="post-item">
   <h3 class="post-heading"><a href="{{ url }}">{{ title }}</a></h3>
   <p>
-    {{ body }}
+    {{ description }}
   </p>
   <div class="tag-row">
     {% for tag in tags %}
-    <span class="tag">{{ tag }}</span>
+    <a class="tag" href="/posts?tags={{ tag | url_encode }}" target="_blank" rel="noopener">{{ tag }}</a>
     {% endfor %}
   </div>
   <div class="post-date muted">{{ date }}</div>
