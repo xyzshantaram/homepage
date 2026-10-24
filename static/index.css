@@ -20,3 +20,18 @@ h3.post-heading {
 .avatar {
   max-height: 30ch;
 }
+
+.post-item {
+  background-color: var(--c-surface);
+  border-radius: 0.5rem;
+  padding: 2rem;
+  margin-block-end: 2rem;
+}
+
+.post-item > :first-child {
+  margin-block-start: 0;
+}
+
+.post-item > :last-child {
+  margin-block-end: 0;
+}
