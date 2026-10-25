@@ -1,0 +1,12 @@
+{% layout "base.liquid" %}
+
+{% block title %}{{ code | escape }} - {{ name | escape }}{% endblock %}
+
+{% block content %}
+<details>
+  <summary class="invert">{{ code | escape }} - {{ name | escape }}</summary>
+  <p>{{ details | escape }}</p>
+</details>
+<p class="small gray"><em>Tap above to view error details.</em></p>
+<p><a href="/">Back home</a></p>
+{% endblock %}

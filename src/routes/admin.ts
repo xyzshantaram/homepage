@@ -1,6 +1,12 @@
 import type { Context } from "hono";
+import { bodyLimit } from "hono/body-limit";
 import { createHmac, timingSafeEqual } from "node:crypto";
-import { CONTENT_REF, type Deps, type Route } from "../utils";
+import {
+  CONTENT_REF,
+  WEBHOOK_BODY_LIMIT,
+  type Deps,
+  type Route,
+} from "../utils";
 
 function verifyWebhook(
   body: string,
@@ -20,6 +26,10 @@ function verifyWebhook(
 export function PostsWebhookRoute(deps: Deps): Route {
   return [
     "/api/v1/admin/posts/hook",
+    bodyLimit({
+      maxSize: WEBHOOK_BODY_LIMIT,
+      onError: (c) => c.json({ ok: false }, 413),
+    }),
     async (c: Context) => {
       const body = await c.req.text();
       if (

@@ -21,9 +21,14 @@ dev:
         -v "{{_posts}}:/app/content:Z" \
         -v "{{_data}}:/app/data:Z" \
         -e POSTS_DIR=/app/content/posts \
+        -e COMMENTS_DB=/app/data/comments.db \
+        -e CAP_STATE=/app/data/cap-state.json \
         {{_image}}
 
 # Run the built image on :3001 with nothing mounted, as in production.
 docker:
     podman build -t {{_image}} .
-    podman run --rm --name homepage-docker -p 0.0.0.0:3001:3000 {{_image}}
+    podman run --rm --name homepage-docker -p 0.0.0.0:3001:3000 \
+        -e COMMENTS_DB=/app/data/comments.db \
+        -e CAP_STATE=/app/data/cap-state.json \
+        {{_image}}

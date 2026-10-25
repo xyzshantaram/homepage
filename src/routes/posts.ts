@@ -1,8 +1,15 @@
 import type { Context } from "hono";
+import { bodyLimit } from "hono/body-limit";
 import { format } from "timeago.js";
 import { commentSchema, renderComment } from "../comments";
+import { sameOrigin } from "../origin";
 import { makeLimiter } from "../rate-limit";
-import { COMMENT_RATE_LIMIT, type Deps, type Route } from "../utils";
+import {
+  COMMENT_BODY_LIMIT,
+  COMMENT_RATE_LIMIT,
+  type Deps,
+  type Route,
+} from "../utils";
 
 export function PostsRoute(deps: Deps): Route {
   return [
@@ -71,6 +78,7 @@ export function PostRoute(deps: Deps): Route {
         return c.notFound();
       }
 
+      const body = await deps.posts.render(post);
       const comments = deps.comments.getForPost(post.url).map((comment) => ({
         ...comment,
         postedIso: new Date(comment.posted).toISOString(),
@@ -78,7 +86,11 @@ export function PostRoute(deps: Deps): Route {
       }));
 
       return c.html(
-        await deps.liquid.renderFile("post.liquid", { ...post, comments }),
+        await deps.liquid.renderFile("post.liquid", {
+          ...post,
+          body,
+          comments,
+        }),
       );
     },
   ];
@@ -87,7 +99,12 @@ export function PostRoute(deps: Deps): Route {
 export function CommentRoute(deps: Deps): Route {
   return [
     "/posts/:year/:month/:slug/comment",
+    sameOrigin(deps.config.siteUrl),
     makeLimiter(COMMENT_RATE_LIMIT.limit, COMMENT_RATE_LIMIT.windowMs),
+    bodyLimit({
+      maxSize: COMMENT_BODY_LIMIT,
+      onError: (c) => c.text("Comment is too large.", 413),
+    }),
     async (c: Context) => {
       const { year, month, slug } = c.req.param();
       const post = await deps.posts.get(year, month, slug);

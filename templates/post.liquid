@@ -1,13 +1,13 @@
 {% layout "base.liquid" %}
-{% block title %}{{ title }}{% endblock %}
+{% block title %}{{ title | escape }}{% endblock %}
 
 {% block content %}
-<h1>{{ title }}</h1>
+<h1>{{ title | escape }}</h1>
 <p class="cta"><a href="/posts" class="muted">Back to posts</a></p>
 
 <div class="tag-row">
   {% for tag in tags %}
-  <a class="tag" href="/posts?tags={{ tag | url_encode }}" target="_blank" rel="noopener">{{ tag }}</a>
+  <a class="tag" href="/posts?tags={{ tag | url_encode }}" target="_blank" rel="noopener">{{ tag | escape }}</a>
   {% endfor %}
 </div>
 
@@ -69,30 +69,6 @@
   {% endif %}
 </section>
 
-<script>
-  document.querySelectorAll(".comment").forEach((comment) => {
-    const button = comment.querySelector(".comment-reply");
-    const author =
-      comment.querySelector(".comment-author")?.textContent?.trim() ||
-      "Anonymous";
-    const body = comment.querySelector(".comment-body")?.innerText?.trim() || "";
-
-    button?.addEventListener("click", () => {
-      const textarea = document.querySelector("#comment-content");
-      if (!textarea) return;
-
-      const quoted = `> **_@${author}_** wrote:  \n${body
-        .split("\n")
-        .map((line) => `> ${line}`)
-        .join("\n")}\n\n`;
-
-      textarea.value = textarea.value.trim()
-        ? `${textarea.value}\n${quoted}`
-        : quoted;
-      textarea.focus();
-      textarea.scrollIntoView({ behavior: "smooth", block: "center" });
-    });
-  });
-</script>
+<script src="/comments.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@cap.js/widget"></script>
 {% endblock %}

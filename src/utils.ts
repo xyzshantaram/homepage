@@ -2,7 +2,7 @@ import { homedir } from "node:os";
 import path from "node:path";
 import type { Handler } from "hono";
 import type { Liquid } from "liquidjs";
-import type { Captcha } from "./captcha";
+import type { Captcha } from "./Captcha";
 import type { CommentStore } from "./comments";
 
 export type Route = [path: string, ...handlers: Handler[]];
@@ -15,12 +15,12 @@ export type Post = {
   tags: string[];
   hidden: boolean;
   url: string;
-  body: string;
 };
 
 export interface PostStorage {
   list(): Promise<Post[]>;
   get(year: string, month: string, slug: string): Promise<Post | undefined>;
+  render(post: Post): Promise<string>;
   refresh?(): Promise<void>;
 }
 
@@ -58,14 +58,16 @@ export const FEED_LIMIT = 25;
 export const MAX_AUTHOR_LENGTH = 40;
 export const MAX_COMMENT_LENGTH = 4000;
 
+export const WEBHOOK_BODY_LIMIT = 1024 * 1024;
+export const COMMENT_BODY_LIMIT = 64 * 1024;
+export const CAPTCHA_BODY_LIMIT = 16 * 1024;
+
 export const DEFAULT_PORT = 3000;
 export const DEFAULT_SITE_URL = "https://shantaram.xyz";
 export const DEFAULT_POSTS_DIR = path.join(
   homedir(),
   "th/scratch/posts-wt/posts",
 );
-export const DEFAULT_COMMENTS_DB = "data/comments.db";
-export const DEFAULT_CAP_STATE = "data/cap-state.json";
 
 export const COMMENT_RATE_LIMIT = { limit: 1, windowMs: 60_000 };
 export const CAPTCHA_RATE_LIMIT = { limit: 5, windowMs: 10_000 };

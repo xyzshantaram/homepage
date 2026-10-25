@@ -15,7 +15,7 @@ export class Captcha {
     return this.cap.createChallenge(CHALLENGE_CONFIG);
   }
 
-  redeem(token: string, solutions: any) {
+  redeem(token: string, solutions: number[]) {
     return this.cap.redeemChallenge({ token, solutions });
   }
 

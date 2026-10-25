@@ -21,9 +21,11 @@ export const commentSchema = z.object({
     .transform((value) => value.trim()),
   content: z
     .string()
-    .min(1)
     .max(MAX_COMMENT_LENGTH)
-    .transform((value) => value.trim()),
+    .transform((value) => value.trim())
+    .refine((value) => value.length > 0, {
+      message: "Comment cannot be empty.",
+    }),
   captcha: z.string().min(1),
 });
 
