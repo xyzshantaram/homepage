@@ -17,6 +17,7 @@ export function PostsRoute(deps: Deps): Route {
     "/posts",
     async (c: Context) => {
       const all = (await deps.posts.list()).filter((post) => !post.hidden);
+      const admin = Boolean(sessionFromRequest(c, deps.admin));
       const availableTags = [...new Set(all.flatMap((post) => post.tags))].sort(
         (a, b) => a.localeCompare(b),
       );
@@ -63,6 +64,7 @@ export function PostsRoute(deps: Deps): Route {
           pages,
           prevUrl: page > 1 ? urlFor(selected, page - 1) : null,
           nextUrl: page < pages ? urlFor(selected, page + 1) : null,
+          admin,
         }),
       );
     },

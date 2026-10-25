@@ -144,6 +144,11 @@ describe("admin routes", () => {
     const cookie = login.headers.get("set-cookie")?.split(";")[0] ?? "";
     expect(cookie.startsWith("admin_session=")).toBe(true);
 
+    const home = await app.request("/", { headers: { cookie } });
+    expect(await home.text()).toContain('href="/admin"');
+    const anonymousHome = await app.request("/");
+    expect(await anonymousHome.text()).not.toContain('href="/admin"');
+
     const page1 = await app.request("/admin", { headers: { cookie } });
     const html1 = await page1.text();
     expect(page1.status).toBe(200);

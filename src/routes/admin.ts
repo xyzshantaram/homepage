@@ -187,7 +187,10 @@ export function AdminPageRoute(deps: Deps): Route {
       const session = sessionFromRequest(c, deps.admin);
       if (!session) {
         return c.html(
-          await deps.liquid.renderFile("admin.liquid", { loggedIn: false }),
+          await deps.liquid.renderFile("admin.liquid", {
+            loggedIn: false,
+            admin: false,
+          }),
         );
       }
 
@@ -210,6 +213,7 @@ export function AdminPageRoute(deps: Deps): Route {
       return c.html(
         await deps.liquid.renderFile("admin.liquid", {
           loggedIn: true,
+          admin: true,
           csrf: session.csrf,
           comments,
           page,

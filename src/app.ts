@@ -7,6 +7,7 @@ import { ZodError } from "zod";
 import { Captcha } from "./Captcha";
 import { CommentStore } from "./comments";
 import { AdminStore } from "./AdminStore";
+import { sessionFromRequest } from "./admin";
 import { FilePostStorage } from "./PostStorage";
 import {
   AdminApiRoute,
@@ -99,12 +100,16 @@ export function createApp(config: Config) {
         ? "Something unexpected happened. Please try again later."
         : error.message;
     const payload = { code, name, details };
+    const admin = Boolean(sessionFromRequest(c, deps.admin));
 
     if (new URL(c.req.url).pathname.startsWith("/api/")) {
       return c.json({ success: false, error: payload }, status);
     }
 
-    return c.html(await deps.liquid.renderFile("error.liquid", payload), status);
+    return c.html(
+      await deps.liquid.renderFile("error.liquid", { ...payload, admin }),
+      status,
+    );
   });
 
   app.use("/*", serveStatic({ root: path.join(root, "static") }));
