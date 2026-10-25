@@ -1,29 +1,25 @@
 import Cap from "@cap.js/server";
-import type { Context } from "hono";
 import { mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
+import { CHALLENGE_CONFIG } from "./utils";
 
-const statePath = process.env.CAP_STATE ?? "data/cap-state.json";
-mkdirSync(dirname(resolve(statePath)), { recursive: true });
+export class Captcha {
+  private cap: Cap;
 
-const cap = new Cap({ tokens_store_path: statePath });
-
-export async function challenge(c: Context) {
-  return c.json(await cap.createChallenge());
-}
-
-export async function redeem(c: Context) {
-  const body = await c.req.json().catch(() => null);
-  const token = body?.token;
-  const solutions = body?.solutions;
-
-  if (!token || !solutions) {
-    return c.json({ success: false }, 400);
+  constructor(statePath: string) {
+    mkdirSync(dirname(resolve(statePath)), { recursive: true });
+    this.cap = new Cap({ tokens_store_path: statePath });
   }
 
-  return c.json(await cap.redeemChallenge({ token, solutions }));
-}
+  createChallenge() {
+    return this.cap.createChallenge(CHALLENGE_CONFIG);
+  }
 
-export function validate(token: string) {
-  return cap.validateToken(token);
+  redeem(token: string, solutions: any) {
+    return this.cap.redeemChallenge({ token, solutions });
+  }
+
+  validate(token: string) {
+    return this.cap.validateToken(token);
+  }
 }

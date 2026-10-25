@@ -13,11 +13,11 @@ COPY src ./src
 COPY templates ./templates
 COPY static ./static
 
-RUN git clone --depth 1 --branch posts https://github.com/xyzshantaram/homepage.git /app/posts
+RUN git clone --depth 1 --branch content https://github.com/xyzshantaram/homepage.git /app/content
 
-ENV POSTS_DIR=/app/posts/posts
+ENV POSTS_DIR=/app/content/posts
 
 VOLUME ["/app/data"]
 
 EXPOSE 3000
-CMD ["bun", "run", "src/index.ts"]
+CMD ["bun", "run", "src/main.ts"]

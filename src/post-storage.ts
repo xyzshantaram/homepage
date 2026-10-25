@@ -2,25 +2,13 @@ import matter from "gray-matter";
 import MarkdownIt from "markdown-it";
 import footnote from "markdown-it-footnote";
 import { escape } from "lodash";
+import { execFile } from "node:child_process";
 import { readdir, readFile } from "node:fs/promises";
-import { homedir } from "node:os";
 import path from "node:path";
+import { promisify } from "node:util";
+import type { Post, PostStorage } from "./utils";
 
-export type Post = {
-  title: string;
-  slug: string;
-  description: string;
-  createdDate: string;
-  tags: string[];
-  hidden: boolean;
-  url: string;
-  body: string;
-};
-
-export interface PostStorage {
-  list(): Promise<Post[]>;
-  get(year: string, month: string, slug: string): Promise<Post | undefined>;
-}
+const exec = promisify(execFile);
 
 const markdown = new MarkdownIt({ html: false, linkify: true }).use(footnote);
 
@@ -94,6 +82,10 @@ function excerpt(source: string): string {
 export class FilePostStorage implements PostStorage {
   constructor(private readonly dir: string) {}
 
+  async refresh(): Promise<void> {
+    await exec("git", ["-C", path.dirname(this.dir), "pull", "--ff-only"]);
+  }
+
   async list(): Promise<Post[]> {
     const files = (await readdir(this.dir)).filter((file) => file.endsWith(".md"));
     const posts = await Promise.all(
@@ -137,8 +129,3 @@ export class FilePostStorage implements PostStorage {
     );
   }
 }
-
-const postsDir =
-  process.env.POSTS_DIR ?? path.join(homedir(), "th/scratch/posts-wt/posts");
-
-export const posts: PostStorage = new FilePostStorage(postsDir);

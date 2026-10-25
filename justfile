@@ -18,9 +18,9 @@ dev:
     podman build -t {{_image}} .
     podman run --rm --name homepage-dev -p 0.0.0.0:3000:3000 \
         -v "{{_static}}:/app/static:Z" \
-        -v "{{_posts}}:/app/posts:Z" \
+        -v "{{_posts}}:/app/content:Z" \
         -v "{{_data}}:/app/data:Z" \
-        -e POSTS_DIR=/app/posts/posts \
+        -e POSTS_DIR=/app/content/posts \
         {{_image}}
 
 # Run the built image on :3001 with nothing mounted, as in production.
