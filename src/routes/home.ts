@@ -12,6 +12,7 @@ export function HomeRoute(deps: Deps): Route {
         await deps.liquid.renderFile("index.liquid", {
           posts: visible.slice(0, HOME_POST_COUNT),
           admin,
+          home: true,
         }),
       );
     },

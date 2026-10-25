@@ -23,6 +23,12 @@
       <hr />
       <nav>
         <ul>
+          {% unless home %}
+          <li>
+            <a href="/">Home</a>
+          </li>
+          {% endunless %}
+
           <li>
             <a href="https://github.com/xyzshantaram">GitHub</a>
           </li>

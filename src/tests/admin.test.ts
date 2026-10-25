@@ -123,7 +123,9 @@ describe("admin routes", () => {
 
     const loginPage = await app.request("/admin");
     expect(loginPage.status).toBe(200);
-    expect(await loginPage.text()).toContain("Sign in with NIP-07");
+    const loginHtml = await loginPage.text();
+    expect(loginHtml).toContain("Sign in with NIP-07");
+    expect(loginHtml).toContain('<a href="/">Home</a>');
 
     const loginEvent = finalizeEvent(
       {

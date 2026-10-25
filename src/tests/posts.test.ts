@@ -142,6 +142,7 @@ describe("post routes", () => {
     expect(html).toContain("Post 28");
     expect(html).toContain("Post 27");
     expect(html).not.toContain("Hidden");
+    expect(html).not.toContain('<a href="/">Home</a>');
   });
 
   test("posts paginate 25 at a time and hide hidden posts", async () => {
@@ -151,6 +152,7 @@ describe("post routes", () => {
     expect(occurrences(page1, 'class="post-item surface"')).toBe(25);
     expect(occurrences(page2, 'class="post-item surface"')).toBe(5);
     expect(page1).toContain("Page 1 of 2");
+    expect(page1).toContain('<a href="/">Home</a>');
     expect(page1).not.toContain("Hidden");
   });
 
@@ -168,7 +170,9 @@ describe("post routes", () => {
     const wrongDate = await app().request("/posts/2023/01/post-0");
 
     expect(visible.status).toBe(200);
-    expect(await visible.text()).toContain("Body 0");
+    const visibleHtml = await visible.text();
+    expect(visibleHtml).toContain("Body 0");
+    expect(visibleHtml).toContain('<a href="/">Home</a>');
     expect(hidden.status).toBe(404);
     expect(wrongDate.status).toBe(404);
   });
