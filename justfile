@@ -21,6 +21,7 @@ dev:
         -v "{{_posts}}:/app/content:Z" \
         -v "{{_data}}:/app/data:Z" \
         -e POSTS_DIR=/app/content/posts \
+        -e MEDIA_DIR=/app/data/media \
         -e COMMENTS_DB=/app/data/comments.db \
         -e CAP_STATE=/app/data/cap-state.json \
         {{_image}}

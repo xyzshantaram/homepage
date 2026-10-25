@@ -215,6 +215,7 @@ export function AdminPageRoute(deps: Deps): Route {
           loggedIn: true,
           admin: true,
           csrf: session.csrf,
+          adminName: deps.adminName,
           comments,
           page,
           pages,

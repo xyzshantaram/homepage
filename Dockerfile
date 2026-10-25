@@ -16,6 +16,7 @@ COPY static ./static
 RUN git clone --depth 1 --branch content https://github.com/xyzshantaram/homepage.git /app/content
 
 ENV POSTS_DIR=/app/content/posts
+ENV MEDIA_DIR=/app/data/media
 ENV COMMENTS_DB=/app/data/comments.db
 ENV CAP_STATE=/app/data/cap-state.json
 

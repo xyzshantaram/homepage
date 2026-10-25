@@ -118,8 +118,25 @@ h3.post-heading {
   margin-block-start: 0;
 }
 
+.admin-session {
+  margin-block-end: 1rem;
+}
+
 .logout-form {
-  margin-block-start: 2rem;
+  display: inline;
+  margin: 0;
+}
+
+.link-button {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--c-accent);
+  font-size: inherit;
+  font-weight: normal;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .comment-body > :first-child {
@@ -137,7 +154,7 @@ h3.post-heading {
   margin-inline: auto;
   margin-block: 2rem;
   padding: 2rem;
-  border: 2px solid var(--c-fg);
+  border: 2px solid var(--c-gray);
   border-radius: 0.8rem;
 }
 
@@ -162,7 +179,7 @@ form.comment-form label + :where(input, textarea) {
 }
 
 form.comment-form :where(input, textarea) {
-  border-color: var(--c-fg);
+  border-color: var(--c-gray);
   border-radius: 0.8rem;
 }
 
@@ -177,4 +194,17 @@ form.comment-form :where(input, textarea) {
 .comment-form button {
   justify-self: end;
   border-radius: 0.8rem;
+}
+
+input,
+textarea,
+select {
+  border-color: var(--c-gray);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--c-accent);
+  outline: none;
 }

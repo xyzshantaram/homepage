@@ -43,8 +43,43 @@ markdown.renderer.rules.table_open = (tokens, index, options, _env, self) =>
 markdown.renderer.rules.table_close = (tokens, index, options, _env, self) =>
   `${self.renderToken(tokens, index, options)}</figure>`;
 
-export function renderMarkdown(source: string): string {
-  return markdown.render(source);
+export type ImageResolver = (src: string) => Promise<string>;
+
+export async function renderMarkdown(
+  source: string,
+  resolveImage?: ImageResolver,
+): Promise<string> {
+  const env = {};
+  const tokens = markdown.parse(source, env);
+
+  if (resolveImage) {
+    const images: any[] = [];
+    const visit = (list: any[]) => {
+      for (const token of list) {
+        if (token.type === "image") {
+          images.push(token);
+        }
+        if (token.children) {
+          visit(token.children);
+        }
+      }
+    };
+    visit(tokens);
+
+    await Promise.all(
+      images.map(async (token) => {
+        const src = token.attrGet("src");
+        if (!src) return;
+        try {
+          token.attrSet("src", await resolveImage(src));
+        } catch {
+          // keep the original source when the resolver fails
+        }
+      }),
+    );
+  }
+
+  return markdown.renderer.render(tokens, markdown.options, env);
 }
 
 export function excerpt(source: string): string {

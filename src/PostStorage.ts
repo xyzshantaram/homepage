@@ -5,6 +5,7 @@ import path from "node:path";
 import { promisify } from "node:util";
 import { z } from "zod";
 import { excerpt, renderMarkdown } from "./markdown";
+import type { ImageStore } from "./ImageStore";
 import type { Post, PostStorage } from "./utils";
 
 const exec = promisify(execFile);
@@ -42,7 +43,10 @@ function toDate(value: unknown, file: string): string | undefined {
 export class FilePostStorage implements PostStorage {
   private cache?: Map<string, CachedPost>;
 
-  constructor(private readonly dir: string) {}
+  constructor(
+    private readonly dir: string,
+    private readonly images?: ImageStore,
+  ) {}
 
   async refresh(): Promise<void> {
     await exec("git", ["-C", path.dirname(this.dir), "pull", "--ff-only"]);
@@ -128,7 +132,10 @@ export class FilePostStorage implements PostStorage {
       return "";
     }
 
-    entry.rendered ??= renderMarkdown(entry.source);
+    entry.rendered ??= await renderMarkdown(
+      entry.source,
+      this.images ? (src) => this.images!.resolve(src, this.dir) : undefined,
+    );
     return entry.rendered;
   }
 }

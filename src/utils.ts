@@ -37,10 +37,12 @@ export type Config = {
   port: number;
   siteUrl: string;
   postsDir: string;
+  mediaDir: string;
   commentsDb: string;
   capState: string;
   webhookSecret?: string;
   adminNpub?: string;
+  nostrRelays: string[];
   pageSize: number;
   feedLimit: number;
 };
@@ -52,6 +54,7 @@ export type Deps = {
   comments: CommentStore;
   captcha: Captcha;
   admin: AdminStore;
+  adminName?: string;
 };
 
 export const HOME_POST_COUNT = 3;
@@ -70,6 +73,11 @@ export const DEFAULT_POSTS_DIR = path.join(
   homedir(),
   "th/scratch/posts-wt/posts",
 );
+export const DEFAULT_MEDIA_DIR = "data/media";
+export const DEFAULT_NOSTR_RELAYS = [
+  "wss://relay.ditto.pub",
+  "wss://relay.primal.net",
+];
 
 export const COMMENT_RATE_LIMIT = { limit: 1, windowMs: 60_000 };
 export const CAPTCHA_RATE_LIMIT = { limit: 5, windowMs: 10_000 };

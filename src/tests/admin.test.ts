@@ -109,7 +109,8 @@ describe("admin routes", () => {
   test("login, paginate, delete, replay, and reject a wrong key", async () => {
     const secret = generateSecretKey();
     const pubkey = getPublicKey(secret);
-    const config = makeConfig(root, { adminNpub: nip19.npubEncode(pubkey) });
+    const npub = nip19.npubEncode(pubkey);
+    const config = makeConfig(root, { adminNpub: npub });
     const app = createApp(config);
 
     const comments = new CommentStore(config.commentsDb);
@@ -156,6 +157,9 @@ describe("admin routes", () => {
     expect(page1.status).toBe(200);
     expect(occurrences(html1, 'class="comment surface"')).toBe(25);
     expect(html1).toContain("Page 1 of 2");
+    expect(html1).toContain("Signed in as");
+    expect(html1).toContain(`@${npub.slice(0, 12)}`);
+    expect(html1).toContain("Sign out");
 
     const page2 = await app.request("/admin?page=2", { headers: { cookie } });
     const html2 = await page2.text();

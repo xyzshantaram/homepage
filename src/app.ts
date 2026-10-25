@@ -7,7 +7,8 @@ import { ZodError } from "zod";
 import { Captcha } from "./Captcha";
 import { CommentStore } from "./comments";
 import { AdminStore } from "./AdminStore";
-import { sessionFromRequest } from "./admin";
+import { adminNpubForDisplay, sessionFromRequest } from "./admin";
+import { ImageStore } from "./ImageStore";
 import { FilePostStorage } from "./PostStorage";
 import {
   AdminApiRoute,
@@ -23,9 +24,10 @@ import {
 } from "./routes";
 import type { Config, Deps } from "./utils";
 
-export function createApp(config: Config) {
+export function createApp(config: Config, adminName?: string) {
   const app = new Hono();
   const root = path.join(import.meta.dir, "..");
+  const images = new ImageStore(config.mediaDir, path.dirname(config.postsDir));
 
   const deps: Deps = {
     config,
@@ -33,10 +35,12 @@ export function createApp(config: Config) {
       root: [path.join(root, "templates")],
       extname: ".liquid",
     }),
-    posts: new FilePostStorage(config.postsDir),
+    posts: new FilePostStorage(config.postsDir, images),
     comments: new CommentStore(config.commentsDb),
     captcha: new Captcha(config.capState),
     admin: new AdminStore(config.commentsDb),
+    adminName:
+      adminName ?? adminNpubForDisplay(config.adminNpub)?.slice(0, 12),
   };
 
   app.use("*", async (c, next) => {
@@ -111,6 +115,15 @@ export function createApp(config: Config) {
       status,
     );
   });
+
+  app.use(
+    "/media/*",
+    serveStatic({
+      root: config.mediaDir,
+      rewriteRequestPath: (requestPath) =>
+        requestPath.replace(/^\/media/, ""),
+    }),
+  );
 
   app.use("/*", serveStatic({ root: path.join(root, "static") }));
 
