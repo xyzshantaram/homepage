@@ -6,8 +6,11 @@ import path from "node:path";
 import { ZodError } from "zod";
 import { Captcha } from "./Captcha";
 import { CommentStore } from "./comments";
+import { AdminStore } from "./AdminStore";
 import { FilePostStorage } from "./PostStorage";
 import {
+  AdminApiRoute,
+  AdminPageRoute,
   ChallengeRoute,
   CommentRoute,
   HomeRoute,
@@ -32,6 +35,7 @@ export function createApp(config: Config) {
     posts: new FilePostStorage(config.postsDir),
     comments: new CommentStore(config.commentsDb),
     captcha: new Captcha(config.capState),
+    admin: new AdminStore(config.commentsDb),
   };
 
   app.use("*", async (c, next) => {
@@ -58,6 +62,8 @@ export function createApp(config: Config) {
   app.get(...PostsRoute(deps));
   app.get(...PostRoute(deps));
   app.post(...CommentRoute(deps));
+  app.get(...AdminPageRoute(deps));
+  app.post(...AdminApiRoute(deps));
 
   for (const route of RssRoutes(deps)) {
     app.get(...route);

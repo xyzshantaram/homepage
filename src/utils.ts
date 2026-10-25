@@ -2,6 +2,7 @@ import { homedir } from "node:os";
 import path from "node:path";
 import type { Handler } from "hono";
 import type { Liquid } from "liquidjs";
+import type { AdminStore } from "./AdminStore";
 import type { Captcha } from "./Captcha";
 import type { CommentStore } from "./comments";
 
@@ -26,7 +27,7 @@ export interface PostStorage {
 
 export type Comment = {
   id: string;
-  for: string;
+  post: string;
   content: string;
   author: string;
   posted: number;
@@ -50,6 +51,7 @@ export type Deps = {
   posts: PostStorage;
   comments: CommentStore;
   captcha: Captcha;
+  admin: AdminStore;
 };
 
 export const HOME_POST_COUNT = 3;
@@ -79,3 +81,9 @@ export const CHALLENGE_CONFIG = {
 };
 
 export const CONTENT_REF = "refs/heads/content";
+
+export const ADMIN_EVENT_KIND = 30078;
+export const ADMIN_EVENT_MAX_AGE_S = 300;
+export const ADMIN_SESSION_COOKIE = "admin_session";
+export const ADMIN_SESSION_TTL_MS = 24 * 60 * 60 * 1000;
+export const ADMIN_BODY_LIMIT = 64 * 1024;

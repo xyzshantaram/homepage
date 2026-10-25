@@ -55,10 +55,19 @@
   <article class="comment surface" id="comment-{{ comment.id }}">
     <div class="comment-meta">
       <span class="comment-author">{{ comment.author | default: "Anonymous" | escape }}</span>
-      <span class="comment-actions">
+      <div class="comment-actions">
         <button type="button" class="comment-reply">Reply</button>
         <time class="muted" datetime="{{ comment.postedIso }}">{{ comment.postedAgo }}</time>
-      </span>
+        {% if admin %}
+        <form method="post" action="/api/v1/admin" class="comment-delete-form">
+          <input type="hidden" name="action" value="delete-comment">
+          <input type="hidden" name="id" value="{{ comment.id }}">
+          <input type="hidden" name="csrf" value="{{ csrf | escape }}">
+          <input type="hidden" name="next" value="{{ url | escape }}">
+          <button type="submit" class="comment-delete">Delete</button>
+        </form>
+        {% endif %}
+      </div>
     </div>
     <div class="comment-body">{{ comment.content }}</div>
   </article>
@@ -70,5 +79,6 @@
 </section>
 
 <script src="/comments.js" defer></script>
+<script src="/confirm-delete.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/@cap.js/widget"></script>
 {% endblock %}

@@ -62,7 +62,11 @@ export function renderComment(source: string): string {
 
 export class CommentStore {
   private listStatement: Statement;
+  private listAllStatement: Statement;
+  private pageStatement: Statement;
+  private countStatement: Statement;
   private insertStatement: Statement;
+  private deleteStatement: Statement;
 
   constructor(dbPath: string) {
     mkdirSync(dirname(resolve(dbPath)), { recursive: true });
@@ -72,26 +76,61 @@ export class CommentStore {
     db.run(`
       CREATE TABLE IF NOT EXISTS comment (
         id TEXT PRIMARY KEY,
-        "for" TEXT NOT NULL,
+        post TEXT NOT NULL,
         content TEXT NOT NULL,
         author TEXT NOT NULL DEFAULT '',
         posted INTEGER NOT NULL
       )
     `);
+
+    const columns = db.query("PRAGMA table_info(comment)").all() as {
+      name: string;
+    }[];
+    const names = new Set(columns.map((column) => column.name));
+    if (names.has("for") && !names.has("post")) {
+      db.run(`ALTER TABLE comment RENAME COLUMN "for" TO post`);
+    }
+
+    db.run(`DROP INDEX IF EXISTS comment_for_posted`);
     db.run(`
-      CREATE INDEX IF NOT EXISTS comment_for_posted ON comment ("for", posted)
+      CREATE INDEX IF NOT EXISTS comment_post_posted ON comment (post, posted)
     `);
 
     this.listStatement = db.query(
-      `SELECT id, "for", content, author, posted FROM comment WHERE "for" = ? ORDER BY posted ASC`,
+      `SELECT id, post, content, author, posted FROM comment WHERE post = ? ORDER BY posted ASC`,
     );
+    this.listAllStatement = db.query(
+      `SELECT id, post, content, author, posted FROM comment ORDER BY posted DESC`,
+    );
+    this.pageStatement = db.query(
+      `SELECT id, post, content, author, posted FROM comment ORDER BY posted DESC LIMIT ? OFFSET ?`,
+    );
+    this.countStatement = db.query(`SELECT COUNT(*) AS count FROM comment`);
     this.insertStatement = db.query(
-      `INSERT INTO comment (id, "for", content, author, posted) VALUES (?, ?, ?, ?, ?)`,
+      `INSERT INTO comment (id, post, content, author, posted) VALUES (?, ?, ?, ?, ?)`,
     );
+    this.deleteStatement = db.query(`DELETE FROM comment WHERE id = ?`);
   }
 
   getForPost(post: string): Comment[] {
     return this.listStatement.all(post) as Comment[];
+  }
+
+  listAll(): Comment[] {
+    return this.listAllStatement.all() as Comment[];
+  }
+
+  listPage(limit: number, offset: number): Comment[] {
+    return this.pageStatement.all(limit, offset) as Comment[];
+  }
+
+  count(): number {
+    const row = this.countStatement.get() as { count: number } | null;
+    return row?.count ?? 0;
+  }
+
+  delete(id: string): boolean {
+    return this.deleteStatement.run(id).changes > 0;
   }
 
   add(input: { post: string; content: string; author: string }): string {

@@ -2,6 +2,7 @@ import type { Context } from "hono";
 import { bodyLimit } from "hono/body-limit";
 import { format } from "timeago.js";
 import { commentSchema, renderComment } from "../comments";
+import { sessionFromRequest } from "../admin";
 import { sameOrigin } from "../origin";
 import { makeLimiter } from "../rate-limit";
 import {
@@ -84,12 +85,15 @@ export function PostRoute(deps: Deps): Route {
         postedIso: new Date(comment.posted).toISOString(),
         postedAgo: format(comment.posted),
       }));
+      const admin = sessionFromRequest(c, deps.admin);
 
       return c.html(
         await deps.liquid.renderFile("post.liquid", {
           ...post,
           body,
           comments,
+          admin: Boolean(admin),
+          csrf: admin?.csrf,
         }),
       );
     },

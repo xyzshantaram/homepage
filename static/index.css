@@ -90,6 +90,38 @@ h3.post-heading {
   cursor: pointer;
 }
 
+.comment-delete-form {
+  display: inline;
+  margin: 0;
+}
+
+.comment-delete {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--c-red);
+  font-size: 1.4rem;
+  font-weight: normal;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.admin-login {
+  display: grid;
+  gap: 1rem;
+  max-width: 50ch;
+  margin-inline: auto;
+}
+
+.admin-login h2 {
+  margin-block-start: 0;
+}
+
+.logout-form {
+  margin-block-start: 2rem;
+}
+
 .comment-body > :first-child {
   margin-block-start: 0;
 }

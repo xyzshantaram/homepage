@@ -1,0 +1,67 @@
+{% layout "base.liquid" %}
+{% block title %}Admin{% endblock %}
+
+{% block content %}
+<h1>Admin</h1>
+
+{% if loggedIn %}
+<p class="muted">Signed in.</p>
+
+<h2>Comments</h2>
+
+{% for comment in comments %}
+<article class="comment surface" id="comment-{{ comment.id }}">
+  <div class="comment-meta">
+    <span class="comment-author">{{ comment.author | default: "Anonymous" | escape }}</span>
+    <div class="comment-actions">
+      <a class="comment-reply" href="{{ comment.post | escape }}">View post</a>
+      <time class="muted" datetime="{{ comment.postedIso }}">{{ comment.postedAgo }}</time>
+      <form method="post" action="/api/v1/admin" class="comment-delete-form">
+        <input type="hidden" name="action" value="delete-comment">
+        <input type="hidden" name="id" value="{{ comment.id }}">
+        <input type="hidden" name="csrf" value="{{ csrf | escape }}">
+        <input type="hidden" name="next" value="{{ pageUrl | escape }}">
+        <button type="submit" class="comment-delete">Delete</button>
+      </form>
+    </div>
+  </div>
+  <div class="comment-body">{{ comment.content }}</div>
+</article>
+{% endfor %}
+
+{% if comments.size == 0 %}
+<p class="muted">No comments.</p>
+{% endif %}
+
+{% if pages > 1 %}
+<nav class="pagination">
+  {% if prevUrl %}<a href="{{ prevUrl }}">Previous</a>{% endif %}
+  <span class="muted">Page {{ page }} of {{ pages }}</span>
+  {% if nextUrl %}<a href="{{ nextUrl }}">Next</a>{% endif %}
+</nav>
+{% endif %}
+
+<form class="logout-form" method="post" action="/api/v1/admin">
+  <input type="hidden" name="action" value="logout">
+  <input type="hidden" name="csrf" value="{{ csrf | escape }}">
+  <button type="submit" class="outlined">Sign out</button>
+</form>
+<script src="/confirm-delete.js" defer></script>
+{% else %}
+<div class="surface admin-login">
+  <h2>Sign in</h2>
+  <p class="muted">
+    Use a NIP-07 extension, or paste an nsec. It stays in this tab and is
+    cleared after sign-in.
+  </p>
+  <button type="button" id="nip07-login">Sign in with NIP-07</button>
+
+  <label for="nsec">nsec</label>
+  <input id="nsec" type="password" autocomplete="off" spellcheck="false" />
+  <button type="button" id="nsec-login">Sign in with nsec</button>
+
+  <p id="login-status" class="muted" role="status"></p>
+</div>
+<script type="module" src="/admin.js"></script>
+{% endif %}
+{% endblock %}
