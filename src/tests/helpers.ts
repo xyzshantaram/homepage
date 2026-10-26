@@ -42,6 +42,40 @@ export function writePost(root: string, fixture: PostFixture): void {
   writeFileSync(path.join(dir, fixture.file), lines.join("\n"));
 }
 
+export type PageFixture = {
+  file: string;
+  title: string;
+  description?: string;
+  extraHead?: string;
+  components?: string[];
+  body?: string;
+};
+
+export function writePage(root: string, fixture: PageFixture): void {
+  const dir = path.join(root, "pages");
+  mkdirSync(dir, { recursive: true });
+
+  const lines = ["---", `title: ${JSON.stringify(fixture.title)}`];
+  if (fixture.description) {
+    lines.push(`description: ${JSON.stringify(fixture.description)}`);
+  }
+  if (fixture.extraHead) {
+    lines.push("extra_head: |");
+    for (const line of fixture.extraHead.split("\n")) {
+      lines.push(`  ${line}`);
+    }
+  }
+  if (fixture.components?.length) {
+    lines.push("components:");
+    for (const component of fixture.components) {
+      lines.push(`  - ${JSON.stringify(component)}`);
+    }
+  }
+  lines.push("---", "", fixture.body ?? "");
+
+  writeFileSync(path.join(dir, fixture.file), lines.join("\n"));
+}
+
 export function makeConfig(
   root: string,
   overrides: Partial<Config> = {},

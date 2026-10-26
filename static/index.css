@@ -221,6 +221,11 @@ select:focus {
   gap: 1rem;
 }
 
+.bmc-qr-wrapper img {
+  max-height: 50vh;
+  width: auto;
+}
+
 .donate-btczap {
   display: flex;
   justify-content: center;

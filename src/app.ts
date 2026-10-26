@@ -8,7 +8,9 @@ import { Captcha } from "./Captcha";
 import { CommentStore } from "./comments";
 import { AdminStore } from "./AdminStore";
 import { adminNpubForDisplay, sessionFromRequest } from "./admin";
+import { ComponentStore } from "./ComponentStore";
 import { ImageStore } from "./ImageStore";
+import { FilePageStorage } from "./PageStorage";
 import { FilePostStorage } from "./PostStorage";
 import {
   AdminApiRoute,
@@ -16,6 +18,7 @@ import {
   ChallengeRoute,
   CommentRoute,
   HomeRoute,
+  PageRoutes,
   PostRoute,
   PostsRoute,
   PostsWebhookRoute,
@@ -27,7 +30,9 @@ import type { Config, Deps } from "./utils";
 export function createApp(config: Config, adminName?: string) {
   const app = new Hono();
   const root = path.join(import.meta.dir, "..");
-  const images = new ImageStore(config.mediaDir, path.dirname(config.postsDir));
+  const contentRoot = path.dirname(config.postsDir);
+  const images = new ImageStore(config.mediaDir, contentRoot);
+  const components = new ComponentStore(config.mediaDir, contentRoot);
 
   const deps: Deps = {
     config,
@@ -36,6 +41,11 @@ export function createApp(config: Config, adminName?: string) {
       extname: ".liquid",
     }),
     posts: new FilePostStorage(config.postsDir, images),
+    pages: new FilePageStorage(
+      path.join(contentRoot, "pages"),
+      images,
+      components,
+    ),
     comments: new CommentStore(config.commentsDb),
     captcha: new Captcha(config.capState),
     admin: new AdminStore(config.commentsDb),
@@ -52,10 +62,12 @@ export function createApp(config: Config, adminName?: string) {
       "Content-Security-Policy",
       [
         "default-src 'self'",
-        "script-src 'self' https://cdn.jsdelivr.net",
-        "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net",
+        "script-src 'self' https://cdn.jsdelivr.net https://cdnjs.buymeacoffee.com https://btczap.io https://esm.sh",
+        "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com",
         "img-src 'self' data: https:",
-        "connect-src 'self'",
+        "font-src 'self' https://fonts.gstatic.com",
+        "connect-src 'self' https://btczap.io https://*.btczap.io",
+        "frame-src 'self' https://btczap.io https://*.btczap.io",
         "base-uri 'self'",
         "form-action 'self'",
         "frame-ancestors 'none'",
@@ -69,6 +81,10 @@ export function createApp(config: Config, adminName?: string) {
   app.post(...CommentRoute(deps));
   app.get(...AdminPageRoute(deps));
   app.post(...AdminApiRoute(deps));
+
+  for (const route of PageRoutes(deps)) {
+    app.get(...route);
+  }
 
   for (const route of RssRoutes(deps)) {
     app.get(...route);
@@ -125,7 +141,14 @@ export function createApp(config: Config, adminName?: string) {
     }),
   );
 
-  app.use("/*", serveStatic({ root: path.join(root, "static") }));
+  app.use(
+    "/static/*",
+    serveStatic({
+      root: path.join(root, "static"),
+      rewriteRequestPath: (requestPath) =>
+        requestPath.replace(/^\/static/, ""),
+    }),
+  );
 
   return app;
 }

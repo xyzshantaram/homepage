@@ -2,55 +2,76 @@ import MarkdownIt from "markdown-it";
 import footnote from "markdown-it-footnote";
 import { escape } from "lodash";
 
-const markdown = new MarkdownIt({ html: false, linkify: true }).use(footnote);
-
-function isImageOnly(inline: any): boolean {
-  if (inline?.type !== "inline" || !inline.children?.length) {
-    return false;
-  }
-  return inline.children.every(
-    (child: any) =>
-      child.type === "image" ||
-      (child.type === "text" && !child.content.trim()),
-  );
-}
-
-markdown.renderer.rules.image = (tokens, index, options, env, self) => {
-  const token = tokens[index];
-  const alt = self.renderInlineAsText(token.children ?? [], options, env);
-  token.attrSet("alt", alt);
-  const image = self.renderToken(tokens, index, options);
-  return `<figure>${image}<figcaption>${escape(alt)}</figcaption></figure>\n`;
-};
-
-markdown.renderer.rules.paragraph_open = (tokens, index, options, _env, self) => {
-  if (isImageOnly(tokens[index + 1])) {
-    return "";
-  }
-  return self.renderToken(tokens, index, options);
-};
-
-markdown.renderer.rules.paragraph_close = (tokens, index, options, _env, self) => {
-  if (isImageOnly(tokens[index - 1])) {
-    return "";
-  }
-  return self.renderToken(tokens, index, options);
-};
-
-markdown.renderer.rules.table_open = (tokens, index, options, _env, self) =>
-  `<figure class="table-wrapper">${self.renderToken(tokens, index, options)}`;
-
-markdown.renderer.rules.table_close = (tokens, index, options, _env, self) =>
-  `${self.renderToken(tokens, index, options)}</figure>`;
-
 export type ImageResolver = (src: string) => Promise<string>;
 
-export async function renderMarkdown(
+function createMarkdown(html: boolean) {
+  const markdown = new MarkdownIt({ html, linkify: true }).use(footnote);
+
+  const isImageOnly = (inline: any): boolean => {
+    if (inline?.type !== "inline" || !inline.children?.length) {
+      return false;
+    }
+    return inline.children.every(
+      (child: any) =>
+        child.type === "image" ||
+        (child.type === "text" && !child.content.trim()),
+    );
+  };
+
+  markdown.renderer.rules.image = (tokens, index, options, env, self) => {
+    const token = tokens[index];
+    const alt = self.renderInlineAsText(token.children ?? [], options, env);
+    token.attrSet("alt", alt);
+    const image = self.renderToken(tokens, index, options);
+    return `<figure>${image}<figcaption>${escape(alt)}</figcaption></figure>\n`;
+  };
+
+  markdown.renderer.rules.paragraph_open = (
+    tokens,
+    index,
+    options,
+    _env,
+    self,
+  ) => {
+    if (isImageOnly(tokens[index + 1])) {
+      return "";
+    }
+    return self.renderToken(tokens, index, options);
+  };
+
+  markdown.renderer.rules.paragraph_close = (
+    tokens,
+    index,
+    options,
+    _env,
+    self,
+  ) => {
+    if (isImageOnly(tokens[index - 1])) {
+      return "";
+    }
+    return self.renderToken(tokens, index, options);
+  };
+
+  markdown.renderer.rules.table_open = (tokens, index, options, _env, self) =>
+    `<figure class="table-wrapper">${self.renderToken(tokens, index, options)}`;
+
+  markdown.renderer.rules.table_close = (tokens, index, options, _env, self) =>
+    `${self.renderToken(tokens, index, options)}</figure>`;
+
+  return markdown;
+}
+
+const markdown = createMarkdown(false);
+const pageMarkdown = createMarkdown(true);
+
+async function render(
+  // @ts-expect-error
+  engine: MarkdownIt,
   source: string,
   resolveImage?: ImageResolver,
 ): Promise<string> {
   const env = {};
-  const tokens = markdown.parse(source, env);
+  const tokens = engine.parse(source, env);
 
   if (resolveImage) {
     const images: any[] = [];
@@ -79,7 +100,21 @@ export async function renderMarkdown(
     );
   }
 
-  return markdown.renderer.render(tokens, markdown.options, env);
+  return engine.renderer.render(tokens, engine.options, env);
+}
+
+export function renderMarkdown(
+  source: string,
+  resolveImage?: ImageResolver,
+): Promise<string> {
+  return render(markdown, source, resolveImage);
+}
+
+export function renderPageMarkdown(
+  source: string,
+  resolveImage?: ImageResolver,
+): Promise<string> {
+  return render(pageMarkdown, source, resolveImage);
 }
 
 export function excerpt(source: string): string {

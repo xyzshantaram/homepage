@@ -8,7 +8,7 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/gh/trythursday/fieber@main/fieber.css"
     />
-    <link rel="stylesheet" href="/index.css" />
+    <link rel="stylesheet" href="/static/index.css" />
     <link
       rel="alternate"
       type="application/rss+xml"
@@ -16,6 +16,9 @@
       href="/blog/feed.rss"
     />
     {{ extraHead }}
+    {% for component in components %}
+    <script type="module" src="{{ component | escape }}"></script>
+    {% endfor %}
   </head>
   <body>
     {% block content %}{% endblock %}
