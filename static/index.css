@@ -14,7 +14,12 @@ h3.post-heading {
 }
 
 .post-date {
-  margin-top: 1rem;
+  margin: 1rem 0;
+  font-style: italic;
+}
+
+.comment-separator {
+  margin-top: 2rem;
 }
 
 .avatar {
@@ -207,4 +212,16 @@ textarea:focus,
 select:focus {
   border-color: var(--c-accent);
   outline: none;
+}
+
+.donate-bmac {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.donate-btczap {
+  display: flex;
+  justify-content: center;
 }
