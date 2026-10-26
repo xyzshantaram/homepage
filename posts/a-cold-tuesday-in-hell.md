@@ -1,8 +1,11 @@
 ---
 title: "a cold tuesday in hell"
 description: "a short prose piece about two people's mornings."
-hidden: true
-created-date: 1970-01-01
+created-date: 2025-08-17
 tags:
   - fiction
 ---
+
+Written for Writers Jam.
+
+[Read it now](https://writersjam.shantaram.xyz/post/5ff5042e)

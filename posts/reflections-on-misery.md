@@ -1,8 +1,11 @@
 ---
 title: "reflections on misery"
 description: "musings on misery and self-acceptance."
-hidden: true
-created-date: 1970-01-01
+created-date: 2025-07-13
 tags:
   - musings
 ---
+
+Written for Writers Jam.
+
+[Read it now](https://writersjam.shantaram.xyz/post/740ef644)
