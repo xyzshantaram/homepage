@@ -13,10 +13,47 @@ export type Post = {
   slug: string;
   description: string;
   createdDate: string;
+  dateLabel: string;
   tags: string[];
   hidden: boolean;
   url: string;
 };
+
+const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
+function ordinal(day: number): string {
+  if (day % 100 >= 11 && day % 100 <= 13) {
+    return "th";
+  }
+  switch (day % 10) {
+    case 1:
+      return "st";
+    case 2:
+      return "nd";
+    case 3:
+      return "rd";
+    default:
+      return "th";
+  }
+}
+
+export function formatPostDate(iso: string): string {
+  const [year, month, day] = iso.split("-").map(Number);
+  return `${day}${ordinal(day)} ${MONTHS[month - 1]}, ${year}`;
+}
 
 export interface PostStorage {
   list(): Promise<Post[]>;
@@ -32,6 +69,20 @@ export type Comment = {
   author: string;
   posted: number;
 };
+
+export type Page = {
+  slug: string;
+  title: string;
+  description: string;
+  extraHead?: string;
+  components: string[];
+};
+
+export interface PageStorage {
+  get(slug: string): Promise<Page | undefined>;
+  render(page: Page): Promise<string>;
+  resolveComponents(page: Page): Promise<string[]>;
+}
 
 export type Config = {
   port: number;
@@ -51,6 +102,7 @@ export type Deps = {
   config: Config;
   liquid: Liquid;
   posts: PostStorage;
+  pages: PageStorage;
   comments: CommentStore;
   captcha: Captcha;
   admin: AdminStore;
