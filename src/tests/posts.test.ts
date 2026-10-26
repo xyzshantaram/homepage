@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, test } from "bun:test";
 import path from "node:path";
 import { FilePostStorage } from "../PostStorage";
 import { createApp } from "../app";
+import { formatPostDate } from "../utils";
 import {
   cleanup,
   makeConfig,
@@ -70,6 +71,22 @@ describe("FilePostStorage", () => {
     const post = await storage.get("2024", "01", "alpha");
     expect(post?.title).toBe("Alpha");
     expect(post?.url).toBe("/posts/2024/01/alpha");
+    expect(post?.dateLabel).toBe("2nd January, 2024");
+  });
+
+  test("formats post dates with correct ordinals", () => {
+    expect(formatPostDate("2023-11-28")).toBe("28th November, 2023");
+    expect(formatPostDate("2024-01-01")).toBe("1st January, 2024");
+    expect(formatPostDate("2024-01-02")).toBe("2nd January, 2024");
+    expect(formatPostDate("2024-01-03")).toBe("3rd January, 2024");
+    expect(formatPostDate("2024-01-04")).toBe("4th January, 2024");
+    expect(formatPostDate("2024-01-11")).toBe("11th January, 2024");
+    expect(formatPostDate("2024-01-12")).toBe("12th January, 2024");
+    expect(formatPostDate("2024-01-13")).toBe("13th January, 2024");
+    expect(formatPostDate("2024-01-21")).toBe("21st January, 2024");
+    expect(formatPostDate("2024-01-22")).toBe("22nd January, 2024");
+    expect(formatPostDate("2024-01-23")).toBe("23rd January, 2024");
+    expect(formatPostDate("2024-01-31")).toBe("31st January, 2024");
   });
 
   test("returns undefined for the wrong month", async () => {
@@ -141,6 +158,7 @@ describe("post routes", () => {
     expect(html).toContain("Post 29");
     expect(html).toContain("Post 28");
     expect(html).toContain("Post 27");
+    expect(html).toContain("30th January, 2024");
     expect(html).not.toContain("Hidden");
     expect(html).not.toContain('<a href="/">Home</a>');
   });
@@ -172,6 +190,7 @@ describe("post routes", () => {
     expect(visible.status).toBe(200);
     const visibleHtml = await visible.text();
     expect(visibleHtml).toContain("Body 0");
+    expect(visibleHtml).toContain("1st January, 2024");
     expect(visibleHtml).toContain('<a href="/">Home</a>');
     expect(hidden.status).toBe(404);
     expect(wrongDate.status).toBe(404);
