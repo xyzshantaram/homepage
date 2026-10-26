@@ -15,6 +15,7 @@
       title="shantaram.xyz"
       href="/blog/feed.rss"
     />
+    {{ extraHead }}
   </head>
   <body>
     {% block content %}{% endblock %}
@@ -38,11 +39,11 @@
           </li>
 
           <li>
-            <a href="https://resume.shantaram.xyz">CV</a>
+            <a href="/contact">Contact</a>
           </li>
 
           <li>
-            <a href="/contact">Contact</a>
+            <a href="https://resume.shantaram.xyz">CV</a>
           </li>
 
           {% if admin %}
