@@ -51,8 +51,18 @@
 - content lives on the orphan posts branch, checked out at ~/th/scratch/posts-wt; 35 posts with created-date, tags, and hidden
 - fieber fork: explicit palette, no system colors, flat kbd/meters, .surface, .content, .table-wrapper, showcase at index.html
 - commits: homepage b3c114c on next (one ahead of origin), posts bbffed7 (pushed), fieber 8c076dc (pushed)
-- RSS feed built and tested
+- RSS feed built and tested; 25 items, /feed.rss + /blog/feed.rss, atom self link
 - Comments built and tested
+- image pipeline: content-relative/HTTP images → sha256 WebP, max 4096, cached at /media
+- page pipeline: FilePageStorage, extra_head, raw page HTML, image resolver
+- Contact, Donate, Services pages built locally; /contact/donate(.html) → /donate
+- Donate: XMR, BMC button + QR, BTCZap; Services: <services-estimate> on fieber forms
+- Dockerfile fixed: src/, templates/, static/, package.json, bun.lock; content clone; /app/data volume
+- comments stack: Cap, bun:sqlite, ULID, zod, limiter; 1 comment/min, 5 captcha/10s; SQLite on /app/data; moderation via admin
+- admin: Nostr event → /api/v1/admin, session cookie, inline actions, footer link
+- posts webhook: /api/v1/admin/posts/hook, HMAC, content branch
+- test suite: 46 tests
+- stack complete: Bun, Hono, LiquidJS, markdown-it + footnote, gray-matter, lodash, timeago, sharp, nostr-tools
 - blog posts we have
   - visible:
 
@@ -73,39 +83,10 @@ macrolight, next-steps, nostr-canvas, nostr-lora, pseudows, rite, stupid-simple-
 
 ## Pending
 
-- comments
-- ~~link-blog shape: external URL + commentary, inline-markdown titles~~ Superseded - we can ersatz this
-  with just our markdown thing
-- compose: signed commit/webhook, render, cache, regenerate RSS
-- images in blog posts should be normalized and stored in docker volume at /media into webp max 4k res with filename = sha256
-  of pre-webp file.
-- `webcomponents:` frontmatter - include the script tags so the components just work.
-- Contact and Donate as markdown pages
-  - redirects from old URLs - not necessary. shantaram.xyz/contact/ and shantaram.xyz/contact/donate/ are fine.
-- Services as a footer item (footer item added, WebComponent not wired up)
 - 30 stubs need real bodies and dates
-- deployment: Dockerfile copies only index.ts and static/, runs bun add hono, and misses templates/, package.json, bun.lock, and the posts
-worktree
-  - no nginx/public_html fallback on next; the live site is still main
-    - This is fine, we will cut over when ready.
-  - analytics counter - shantaram.xyz has some analytics solution
-  - tests/CI
-- stack needed
-  - already: Bun, Hono, LiquidJS, markdown-it + footnote, gray-matter, lodash, fieber
-  - comments: @cap.js/server, @cap.js/widget via CDN, bun:sqlite, ULID, zod, a limiter
-  - RSS: plain XML generation
-    - lastBuildDate currently uses new Date(), so it changes on every request
-    - better to set it to the newest post date; otherwise clients see a changed feed on every fetch
-    - we also send no ETag or Last-Modified, so conditional GET is not available yet
-    - Will do this when our webhook stuff takes shape further
-  - deploy: fixed Dockerfile, posts baked or mounted, nginx/redirect map
-  - git/webhook for compose is also a v1 target. the idea is to make it easy for me to post by
-    building a complete if feature-light website now, not make it something we engineer forever.
-
-- limits: 1 comment per minute per IP+path; 5 captcha calls per 10s
-- SQLite location: also in docker volume (storage:create with dokku)
-- Moderation: should be able to copy comment id and push to posts branch maybe? 
-  - bun run scripts/delete-comment.ts <ID> could create a commit and push, which also hits a webhook
-  - each comment should be ID'd by a ULID and store the posts/2025/07/... slug as the reference/grouping key
-- Deploy: we will cut over once we are satisfied, no need to rush it
-- RSS: keep /blog/feed.rss as a redirect, but shantaram.xyz/feed.rss is the path we want people to use going forward
+- Deploy/cutover
+  - next.shantaram.xyz; nginx 404 → public_html; test webhook push
+  - cut over to main when satisfied
+  - analytics counter
+  - CI (tests exist, no CI)
+- RSS hardening: stable lastBuildDate (newest post); ETag/Last-Modified

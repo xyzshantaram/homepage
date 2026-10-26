@@ -6,7 +6,7 @@ import { promisify } from "node:util";
 import { z } from "zod";
 import { excerpt, renderMarkdown } from "./markdown";
 import type { ImageStore } from "./ImageStore";
-import type { Post, PostStorage } from "./utils";
+import { formatPostDate, type Post, type PostStorage } from "./utils";
 
 const exec = promisify(execFile);
 const isoDate = z.iso.date();
@@ -76,6 +76,7 @@ export class FilePostStorage implements PostStorage {
           slug,
           description: String(data.description ?? excerpt(content)).trim(),
           createdDate,
+          dateLabel: formatPostDate(createdDate),
           tags: Array.isArray(data.tags)
             ? data.tags.map(String)
             : data.tags
