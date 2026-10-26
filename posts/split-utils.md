@@ -100,7 +100,8 @@ since May.
 
 The assignment is still the time consuming part but with keyboard shortcuts it's
 pretty fast - about 10 minutes of me at the computer to get through a month's 
-work of orders. Now I order shit stress-free.
+work of orders. Now I order shit stress-free. I just have to sit down for 10 
+minutes every month to decide who got what.
 
 ## Try it
 
