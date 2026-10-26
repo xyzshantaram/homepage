@@ -19,7 +19,7 @@
 </div>
 
 {% for post in posts %}
-{% render "post.partial.liquid" title: post.title url: post.url description: post.description tags: post.tags date: post.createdDate %}
+{% render "post.partial.liquid" title: post.title url: post.url description: post.description tags: post.tags date: post.dateLabel %}
 {% endfor %}
 
 {% if posts.size == 0 %}

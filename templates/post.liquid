@@ -5,17 +5,19 @@
 <h1>{{ title | escape }}</h1>
 <p class="cta"><a href="/posts" class="muted">Back to posts</a></p>
 
+<div class="post-date">{{ dateLabel }}</div>
+
 <div class="tag-row">
   {% for tag in tags %}
   <a class="tag" href="/posts?tags={{ tag | url_encode }}" target="_blank" rel="noopener">{{ tag | escape }}</a>
   {% endfor %}
 </div>
 
-<div class="post-date muted">{{ createdDate }}</div>
-
 <div class="post-body content">
 {{ body }}
 </div>
+
+<hr class="comment-separator">
 
 <section id="comments" class="comments">
   <h2>Comments</h2>
