@@ -2,7 +2,7 @@ import type { Context } from "hono";
 import { getCookie } from "hono/cookie";
 import { nip19, SimplePool, verifyEvent, type Event } from "nostr-tools";
 import { z } from "zod";
-import type { AdminSession, AdminStore } from "./AdminStore";
+import type { AdminSession, AdminStore } from "./storages/AdminStore";
 import {
   ADMIN_EVENT_KIND,
   ADMIN_EVENT_MAX_AGE_S,

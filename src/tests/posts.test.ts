@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, test } from "bun:test";
 import path from "node:path";
-import { FilePostStorage } from "../PostStorage";
+import { FilePostStorage } from "../storages/PostStorage";
 import { createApp } from "../app";
 import { formatPostDate } from "../utils";
 import {

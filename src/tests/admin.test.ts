@@ -6,13 +6,13 @@ import {
   getPublicKey,
   nip19,
 } from "nostr-tools";
-import { AdminStore } from "../AdminStore";
+import { AdminStore } from "../storages/AdminStore";
 import {
   adminPubkey,
   readAdminEvent,
   verifyAdminEvent,
 } from "../admin";
-import { CommentStore } from "../comments";
+import { CommentStore } from "../storages/comments";
 import { createApp } from "../app";
 import {
   cleanup,

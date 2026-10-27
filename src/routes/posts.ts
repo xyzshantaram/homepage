@@ -1,7 +1,7 @@
 import type { Context } from "hono";
 import { bodyLimit } from "hono/body-limit";
 import { format } from "timeago.js";
-import { commentSchema, renderComment } from "../comments";
+import { commentSchema, renderComment } from "../storages/comments";
 import { sessionFromRequest } from "../admin";
 import { sameOrigin } from "../origin";
 import { makeLimiter } from "../rate-limit";

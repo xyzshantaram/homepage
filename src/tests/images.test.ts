@@ -4,8 +4,8 @@ import { afterEach, beforeEach, describe, expect, test } from "bun:test";
 import path from "node:path";
 import sharp from "sharp";
 import { createApp } from "../app";
-import { ImageStore } from "../ImageStore";
-import { FilePostStorage } from "../PostStorage";
+import { ImageStore } from "../storages/ImageStore";
+import { FilePostStorage } from "../storages/PostStorage";
 import { cleanup, makeConfig, tempRoot, writePost } from "./helpers";
 
 const PNG = await sharp({

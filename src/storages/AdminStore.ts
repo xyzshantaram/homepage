@@ -2,7 +2,7 @@ import { Database } from "bun:sqlite";
 import { createHash, randomBytes } from "node:crypto";
 import { mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
-import { ADMIN_SESSION_TTL_MS } from "./utils";
+import { ADMIN_SESSION_TTL_MS } from "../utils";
 
 type Statement = ReturnType<Database["query"]>;
 

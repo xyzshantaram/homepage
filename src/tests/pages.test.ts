@@ -2,8 +2,8 @@ import { afterEach, beforeEach, describe, expect, test } from "bun:test";
 import { readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { createApp } from "../app";
-import { ComponentStore } from "../ComponentStore";
-import { FilePageStorage } from "../PageStorage";
+import { ComponentStore } from "../storages/ComponentStore";
+import { FilePageStorage } from "../storages/PageStorage";
 import { cleanup, makeConfig, tempRoot, writePage } from "./helpers";
 
 function fixtures(root: string): void {

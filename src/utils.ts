@@ -2,9 +2,9 @@ import { homedir } from "node:os";
 import path from "node:path";
 import type { Handler } from "hono";
 import type { Liquid } from "liquidjs";
-import type { AdminStore } from "./AdminStore";
+import type { AdminStore } from "./storages/AdminStore";
 import type { Captcha } from "./Captcha";
-import type { CommentStore } from "./comments";
+import type { CommentStore } from "./storages/comments";
 
 export type Route = [path: string, ...handlers: Handler[]];
 

@@ -9,7 +9,7 @@ import {
   MAX_AUTHOR_LENGTH,
   MAX_COMMENT_LENGTH,
   type Comment,
-} from "./utils";
+} from "../utils";
 
 type Statement = ReturnType<Database["query"]>;
 

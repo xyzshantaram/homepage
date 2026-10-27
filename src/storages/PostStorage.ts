@@ -4,9 +4,9 @@ import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { promisify } from "node:util";
 import { z } from "zod";
-import { excerpt, renderMarkdown } from "./markdown";
+import { excerpt, renderMarkdown } from "../markdown";
 import type { ImageStore } from "./ImageStore";
-import { formatPostDate, type Post, type PostStorage } from "./utils";
+import { formatPostDate, type Post, type PostStorage } from "../utils";
 
 const exec = promisify(execFile);
 const isoDate = z.iso.date();

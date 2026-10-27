@@ -1,7 +1,7 @@
 import { Database } from "bun:sqlite";
 import { afterEach, beforeEach, describe, expect, test } from "bun:test";
 import path from "node:path";
-import { CommentStore, commentSchema, renderComment } from "../comments";
+import { CommentStore, commentSchema, renderComment } from "../storages/comments";
 import { cleanup, tempRoot } from "./helpers";
 
 describe("comment input and rendering", () => {

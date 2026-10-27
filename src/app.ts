@@ -5,13 +5,13 @@ import { Liquid } from "liquidjs";
 import path from "node:path";
 import { ZodError } from "zod";
 import { Captcha } from "./Captcha";
-import { CommentStore } from "./comments";
-import { AdminStore } from "./AdminStore";
+import { CommentStore } from "./storages/comments";
+import { AdminStore } from "./storages/AdminStore";
 import { adminNpubForDisplay, sessionFromRequest } from "./admin";
-import { ComponentStore } from "./ComponentStore";
-import { ImageStore } from "./ImageStore";
-import { FilePageStorage } from "./PageStorage";
-import { FilePostStorage } from "./PostStorage";
+import { ComponentStore } from "./storages/ComponentStore";
+import { ImageStore } from "./storages/ImageStore";
+import { FilePageStorage } from "./storages/PageStorage";
+import { FilePostStorage } from "./storages/PostStorage";
 import {
   AdminApiRoute,
   AdminPageRoute,
