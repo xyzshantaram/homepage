@@ -3,7 +3,7 @@ import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import type { ComponentStore } from "./ComponentStore";
 import type { ImageStore } from "./ImageStore";
-import { renderPageMarkdown } from "../markdown";
+import { renderPageMarkdown } from "../utils/markdown";
 import type { Page, PageStorage } from "../utils";
 
 type CachedPage = {

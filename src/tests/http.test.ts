@@ -2,10 +2,10 @@ import { Hono } from "hono";
 import { afterEach, beforeEach, describe, expect, test } from "bun:test";
 import { createHmac } from "node:crypto";
 import path from "node:path";
-import { Captcha } from "../Captcha";
+import { Captcha } from "../utils/captcha";
 import { createApp } from "../app";
-import { sameOrigin } from "../origin";
-import { makeLimiter } from "../rate-limit";
+import { sameOrigin } from "../utils/origin";
+import { makeLimiter } from "../utils/rate-limit";
 import { cleanup, makeConfig, tempRoot, writePost } from "./helpers";
 
 function sign(body: string): string {

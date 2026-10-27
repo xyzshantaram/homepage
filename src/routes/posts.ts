@@ -3,8 +3,8 @@ import { bodyLimit } from "hono/body-limit";
 import { format } from "timeago.js";
 import { commentSchema, renderComment } from "../storages/comments";
 import { sessionFromRequest } from "../admin";
-import { sameOrigin } from "../origin";
-import { makeLimiter } from "../rate-limit";
+import { sameOrigin } from "../utils/origin";
+import { makeLimiter } from "../utils/rate-limit";
 import {
   COMMENT_BODY_LIMIT,
   COMMENT_RATE_LIMIT,

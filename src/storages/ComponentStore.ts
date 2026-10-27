@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { mkdirSync } from "node:fs";
 import { access, mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { loadContentSource } from "../content-source";
+import { loadContentSource } from "../utils/content-source";
 
 const DEFAULT_EXTENSION = ".js";
 

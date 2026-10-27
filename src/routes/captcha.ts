@@ -1,8 +1,8 @@
 import type { Context } from "hono";
 import { bodyLimit } from "hono/body-limit";
 import { z } from "zod";
-import { sameOrigin } from "../origin";
-import { makeLimiter } from "../rate-limit";
+import { sameOrigin } from "../utils/origin";
+import { makeLimiter } from "../utils/rate-limit";
 import {
   CAPTCHA_BODY_LIMIT,
   CAPTCHA_RATE_LIMIT,

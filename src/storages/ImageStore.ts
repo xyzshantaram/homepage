@@ -3,7 +3,7 @@ import { mkdirSync } from "node:fs";
 import { access, mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import sharp from "sharp";
-import { loadContentSource } from "../content-source";
+import { loadContentSource } from "../utils/content-source";
 
 const MAX_EDGE = 4096;
 

@@ -4,7 +4,7 @@ import { HTTPException } from "hono/http-exception";
 import { Liquid } from "liquidjs";
 import path from "node:path";
 import { ZodError } from "zod";
-import { Captcha } from "./Captcha";
+import { Captcha } from "./utils/captcha";
 import { CommentStore } from "./storages/comments";
 import { AdminStore } from "./storages/AdminStore";
 import { adminNpubForDisplay, sessionFromRequest } from "./admin";
