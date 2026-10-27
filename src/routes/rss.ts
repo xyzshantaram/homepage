@@ -50,7 +50,17 @@ export function RssRoutes(deps: Deps): Route[] {
       "Cache-Control": "public, max-age=300",
     };
 
-    if (c.req.header("if-none-match") === etag) {
+    const ifNoneMatch = c.req.header("if-none-match");
+    const ifModifiedSince = c.req.header("if-modified-since");
+    const since = ifModifiedSince ? Date.parse(ifModifiedSince) : Number.NaN;
+    const notModified = ifNoneMatch
+      ? ifNoneMatch.split(",").some((tag) => {
+          const trimmed = tag.trim();
+          return trimmed === "*" || trimmed === etag;
+        })
+      : Number.isFinite(since) && since >= Date.parse(lastModified);
+
+    if (notModified) {
       return c.body(null, 304, headers);
     }
 

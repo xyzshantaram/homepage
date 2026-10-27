@@ -211,6 +211,49 @@ describe("post routes", () => {
     expect(xml).not.toContain("Hidden");
   });
 
+  test("supports conditional RSS requests", async () => {
+    const response = await app().request("/feed.rss");
+    const etag = response.headers.get("etag") ?? "";
+    const lastModified = response.headers.get("last-modified") ?? "";
+
+    expect(etag).toMatch(/^W\/"/);
+    expect(lastModified).toBe("Tue, 30 Jan 2024 00:00:00 GMT");
+
+    const byTag = await app().request("/feed.rss", {
+      headers: { "if-none-match": etag },
+    });
+    expect(byTag.status).toBe(304);
+    expect(byTag.headers.get("etag")).toBe(etag);
+
+    const byList = await app().request("/feed.rss", {
+      headers: { "if-none-match": `"other", ${etag}` },
+    });
+    expect(byList.status).toBe(304);
+
+    const byAny = await app().request("/feed.rss", {
+      headers: { "if-none-match": "*" },
+    });
+    expect(byAny.status).toBe(304);
+
+    const byDate = await app().request("/feed.rss", {
+      headers: { "if-modified-since": lastModified },
+    });
+    expect(byDate.status).toBe(304);
+
+    const stale = await app().request("/feed.rss", {
+      headers: { "if-modified-since": "Mon, 01 Jan 2024 00:00:00 GMT" },
+    });
+    expect(stale.status).toBe(200);
+
+    const precedence = await app().request("/feed.rss", {
+      headers: {
+        "if-none-match": '"nope"',
+        "if-modified-since": lastModified,
+      },
+    });
+    expect(precedence.status).toBe(200);
+  });
+
   test("escapes XML and strips characters invalid in XML 1.0", async () => {
     writePost(root, {
       file: "xml.md",

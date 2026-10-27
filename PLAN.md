@@ -89,4 +89,4 @@ macrolight, next-steps, nostr-canvas, nostr-lora, pseudows, rite, stupid-simple-
   - cut over to main when satisfied
   - analytics counter
   - CI (tests exist, no CI)
-- RSS hardening: stable lastBuildDate (newest post); ETag/Last-Modified
+- RSS hardening: stable lastBuildDate (newest post); ETag/Last-Modified; 304s on If-None-Match/If-Modified-Since
