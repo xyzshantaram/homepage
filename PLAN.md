@@ -87,6 +87,6 @@ macrolight, next-steps, nostr-canvas, nostr-lora, pseudows, rite, stupid-simple-
 - Deploy/cutover
   - next.shantaram.xyz; nginx 404 → public_html; test webhook push
   - cut over to main when satisfied
-  - analytics counter
+  - analytics counter (Umami at analytics.shantaram.xyz, website id 2e73d7f4-fe28-412d-a960-bbe0a31fbfa1)
   - CI (tests exist, no CI)
 - RSS hardening: stable lastBuildDate (newest post); ETag/Last-Modified; 304s on If-None-Match/If-Modified-Since

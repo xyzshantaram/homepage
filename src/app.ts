@@ -62,11 +62,11 @@ export function createApp(config: Config, adminName?: string) {
       "Content-Security-Policy",
       [
         "default-src 'self'",
-        "script-src 'self' https://cdn.jsdelivr.net https://cdnjs.buymeacoffee.com https://btczap.io https://esm.sh",
+        "script-src 'self' https://cdn.jsdelivr.net https://cdnjs.buymeacoffee.com https://btczap.io https://esm.sh https://analytics.shantaram.xyz",
         "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com",
         "img-src 'self' data: https:",
         "font-src 'self' https://fonts.gstatic.com",
-        "connect-src 'self' https://btczap.io https://*.btczap.io",
+        "connect-src 'self' https://btczap.io https://*.btczap.io https://analytics.shantaram.xyz",
         "frame-src 'self' https://btczap.io https://*.btczap.io",
         "base-uri 'self'",
         "form-action 'self'",

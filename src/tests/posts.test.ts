@@ -270,12 +270,22 @@ describe("post routes", () => {
     expect(xml).not.toContain("\u0000");
   });
 
-  test("sets security headers", async () => {
+  test("sets security headers and loads analytics", async () => {
     const response = await app().request("/");
+    const html = await response.text();
 
     expect(response.headers.get("x-frame-options")).toBe("DENY");
     expect(response.headers.get("content-security-policy")).toContain(
       "script-src 'self' https://cdn.jsdelivr.net",
+    );
+    expect(response.headers.get("content-security-policy")).toContain(
+      "https://analytics.shantaram.xyz",
+    );
+    expect(html).toContain(
+      'src="https://analytics.shantaram.xyz/script.js"',
+    );
+    expect(html).toContain(
+      'data-website-id="2e73d7f4-fe28-412d-a960-bbe0a31fbfa1"',
     );
   });
 });
