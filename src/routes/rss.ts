@@ -1,7 +1,6 @@
 import type { Context } from "hono";
-import { escape } from "lodash";
 import { createHash } from "node:crypto";
-import type { Deps, Route } from "../utils";
+import { escapeXml, type Deps, type Route } from "../utils";
 
 export function RssRoutes(deps: Deps): Route[] {
   const serveRss = async (c: Context) => {
@@ -15,10 +14,10 @@ export function RssRoutes(deps: Deps): Route[] {
         const link = `${siteUrl}${post.url}`;
         return [
           "    <item>",
-          `      <title>${escape(post.title)}</title>`,
-          `      <link>${escape(link)}</link>`,
-          `      <guid>${escape(link)}</guid>`,
-          `      <description>${escape(post.description)}</description>`,
+          `      <title>${escapeXml(post.title)}</title>`,
+          `      <link>${escapeXml(link)}</link>`,
+          `      <guid>${escapeXml(link)}</guid>`,
+          `      <description>${escapeXml(post.description)}</description>`,
           `      <pubDate>${new Date(`${post.createdDate}T00:00:00Z`).toUTCString()}</pubDate>`,
           "    </item>",
         ].join("\n");
@@ -35,9 +34,9 @@ export function RssRoutes(deps: Deps): Route[] {
       '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">',
       "  <channel>",
       "    <title>shantaram.xyz</title>",
-      `    <link>${escape(`${siteUrl}/`)}</link>`,
-      "    <description>shan's corner of the internet</description>",
-      `    <atom:link href="${escape(`${siteUrl}/feed.rss`)}" rel="self" type="application/rss+xml" />`,
+      `    <link>${escapeXml(`${siteUrl}/`)}</link>`,
+      `    <description>${escapeXml("shan's corner of the internet")}</description>`,
+      `    <atom:link href="${escapeXml(`${siteUrl}/feed.rss`)}" rel="self" type="application/rss+xml" />`,
       `    <lastBuildDate>${lastModified}</lastBuildDate>`,
       items,
       "  </channel>",

@@ -55,6 +55,19 @@ export function formatPostDate(iso: string): string {
   return `${day}${ordinal(day)} ${MONTHS[month - 1]}, ${year}`;
 }
 
+const INVALID_XML_CHARS =
+  /[^\u0009\u000A\u000D\u0020-\uD7FF\uE000-\uFFFD\u{10000}-\u{10FFFF}]/gu;
+
+export function escapeXml(value: string): string {
+  return value
+    .replace(INVALID_XML_CHARS, "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 export interface PostStorage {
   list(): Promise<Post[]>;
   get(year: string, month: string, slug: string): Promise<Post | undefined>;

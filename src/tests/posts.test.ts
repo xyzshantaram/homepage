@@ -211,6 +211,22 @@ describe("post routes", () => {
     expect(xml).not.toContain("Hidden");
   });
 
+  test("escapes XML and strips characters invalid in XML 1.0", async () => {
+    writePost(root, {
+      file: "xml.md",
+      title: 'A & B <C> "D" \'E\'',
+      date: "2024-05-06",
+      description: "before \u0000 after",
+      body: "Body",
+    });
+
+    const xml = await (await app().request("/feed.rss")).text();
+
+    expect(xml).toContain("A &amp; B &lt;C&gt; &quot;D&quot; &#39;E&#39;");
+    expect(xml).toContain("<description>before  after</description>");
+    expect(xml).not.toContain("\u0000");
+  });
+
   test("sets security headers", async () => {
     const response = await app().request("/");
 
