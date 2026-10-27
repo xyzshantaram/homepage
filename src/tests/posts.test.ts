@@ -149,15 +149,17 @@ describe("post routes", () => {
 
   const app = () => createApp(makeConfig(root));
 
-  test("home shows the three newest visible posts", async () => {
+  test("home shows the five newest visible posts", async () => {
     const response = await app().request("/");
     const html = await response.text();
 
     expect(response.status).toBe(200);
-    expect(occurrences(html, 'class="post-item surface"')).toBe(3);
+    expect(occurrences(html, 'class="post-item surface"')).toBe(5);
     expect(html).toContain("Post 29");
     expect(html).toContain("Post 28");
     expect(html).toContain("Post 27");
+    expect(html).toContain("Post 26");
+    expect(html).toContain("Post 25");
     expect(html).toContain("30th January, 2024");
     expect(html).not.toContain("Hidden");
     expect(html).not.toContain('<a href="/">Home</a>');

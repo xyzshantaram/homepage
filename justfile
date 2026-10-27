@@ -2,7 +2,7 @@
 
 _image := "localhost/homepage-prototypes:latest"
 _static := justfile_directory() / "static"
-_posts := env_var("HOME") / "th/scratch/posts-wt"
+_posts := env_var("HOME") / "th/homepage-content"
 _data := justfile_directory() / "data"
 
 # List the available recipes.

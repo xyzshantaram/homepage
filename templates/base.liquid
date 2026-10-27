@@ -25,37 +25,7 @@
 
     <footer>
       <hr />
-      <nav>
-        <ul>
-          {% unless home %}
-          <li>
-            <a href="/">Home</a>
-          </li>
-          {% endunless %}
-
-          <li>
-            <a href="https://github.com/xyzshantaram">GitHub</a>
-          </li>
-
-          <li>
-            <a href="/services">Hire me</a>
-          </li>
-
-          <li>
-            <a href="/contact">Contact</a>
-          </li>
-
-          <li>
-            <a href="https://resume.shantaram.xyz">CV</a>
-          </li>
-
-          {% if admin %}
-          <li>
-            <a href="/admin">Admin</a>
-          </li>
-          {% endif %}
-        </ul>
-      </nav>
+      {% render "nav.partial.liquid", home: home, admin: admin %}
     </footer>
   </body>
 </html>

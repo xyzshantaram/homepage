@@ -43,12 +43,12 @@
 ## done
 
 - Bun + Hono + LiquidJS app; fieber from jsDelivr
-- / renders the 3 newest visible posts
+- / renders the 5 newest visible posts
 - /posts renders all visible posts, 25 per page, ?tags=a,b filtering, filled/outlined tag buttons
 - /posts/{year}/{month}/{slug} renders the full post
 - markdown: GFM, footnotes, images as <figure> + <figcaption>, tables as scrollable 20ch-column figures
 - footer: GitHub, Hire me, CV, Contact; body-size links
-- content lives on the orphan posts branch, checked out at ~/th/scratch/posts-wt; 35 posts with created-date, tags, and hidden
+- content lives on the orphan content branch, checked out at ~/th/homepage-content; 35 posts with created-date, tags, and hidden
 - fieber fork: explicit palette, no system colors, flat kbd/meters, .surface, .content, .table-wrapper, showcase at index.html
 - commits: homepage b3c114c on next (one ahead of origin), posts bbffed7 (pushed), fieber 8c076dc (pushed)
 - RSS feed built and tested; 25 items, /feed.rss + /blog/feed.rss, atom self link

@@ -109,7 +109,7 @@ export type Deps = {
   adminName?: string;
 };
 
-export const HOME_POST_COUNT = 3;
+export const HOME_POST_COUNT = 5;
 export const PAGE_SIZE = 25;
 export const FEED_LIMIT = 25;
 export const MAX_AUTHOR_LENGTH = 40;
@@ -123,7 +123,7 @@ export const DEFAULT_PORT = 3000;
 export const DEFAULT_SITE_URL = "https://shantaram.xyz";
 export const DEFAULT_POSTS_DIR = path.join(
   homedir(),
-  "th/scratch/posts-wt/posts",
+  "th/homepage-content/posts",
 );
 export const DEFAULT_MEDIA_DIR = "data/media";
 export const DEFAULT_NOSTR_RELAYS = [
