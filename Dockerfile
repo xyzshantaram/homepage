@@ -1,26 +1,31 @@
-# syntax=docker/dockerfile:1
+FROM docker.io/oven/bun:1-debian
 
-# static-web-server binary, taken from the official image (same convention
-# as luanti and crazy-wall — see VPS_STATE.md in the dokku-migration notes).
-FROM docker.io/joseluisq/static-web-server:2.44.0 AS sws
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends git ca-certificates gosu \
+    && rm -rf /var/lib/apt/lists/*
 
-FROM alpine:3.22
+WORKDIR /app
 
-# Dedicated non-root user, uid 10004 (fleet convention, see VPS_STATE.md).
-# -D: no password. -S: system user/group. -H: no home dir.
-# /sbin/nologin does not exist in this image but stores fine in /etc/passwd,
-# since nothing ever logs in as this user.
-RUN addgroup -g 10004 -S homepage \
-    && adduser -D -S -H -s /sbin/nologin -G homepage -u 10004 homepage
+COPY package.json bun.lock ./
+RUN bun install --frozen-lockfile --production
 
-WORKDIR /www
-COPY --from=sws /static-web-server /usr/local/bin/static-web-server
-COPY --chown=homepage:homepage . .
+COPY src ./src
+COPY templates ./templates
+COPY static ./static
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
-USER homepage
-EXPOSE 8080
+RUN git clone --depth 1 --branch content https://github.com/xyzshantaram/homepage.git /app/content
 
-# --host 0.0.0.0: static-web-server defaults to "::" (IPv6 wildcard), but
-# dokku's nginx proxies over IPv4.
-# --port 8080: a non-root user cannot bind ports below 1024.
-CMD ["/usr/local/bin/static-web-server", "--host", "0.0.0.0", "--port", "8080", "--root", "/www"]
+ENV POSTS_DIR=/app/content/posts
+ENV MEDIA_DIR=/app/data/media
+ENV COMMENTS_DB=/app/data/comments.db
+ENV CAP_STATE=/app/data/cap-state.json
+
+RUN mkdir -p /app/data && chown -R bun:bun /app
+
+VOLUME ["/app/data"]
+
+EXPOSE 3000
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["bun", "run", "src/main.ts"]

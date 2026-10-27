@@ -1,0 +1,12 @@
+<div class="post-item surface">
+  <h3 class="post-heading"><a href="{{ url }}">{{ title | escape }}</a></h3>
+  <p>
+    {{ description | escape }}
+  </p>
+  <div class="tag-row">
+    {% for tag in tags %}
+    <a class="tag" href="/posts?tags={{ tag | url_encode }}" target="_blank" rel="noopener">{{ tag | escape }}</a>
+    {% endfor %}
+  </div>
+  <div class="post-date">{{ date }}</div>
+</div>

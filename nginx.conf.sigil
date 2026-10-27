@@ -115,7 +115,7 @@ server {
   {{ end }}
 
   location @public_html {
-    root {{ var "PUBLIC_HTML_DIR" }};
+    root /home/sid/public_html;
     add_header 'Access-Control-Allow-Origin' '*' always;
   }
 

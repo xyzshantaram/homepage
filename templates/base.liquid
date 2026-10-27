@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}shantaram.xyz{% endblock %}</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/trythursday/fieber@main/fieber.css"
+    />
+    <link rel="stylesheet" href="/static/index.css" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="shantaram.xyz"
+      href="/blog/feed.rss"
+    />
+    {{ extraHead }}
+    {% for component in components %}
+    <script type="module" src="{{ component | escape }}"></script>
+    {% endfor %}
+  </head>
+  <body>
+    {% block content %}{% endblock %}
+
+    <footer>
+      <hr />
+      {% render "nav.partial.liquid", home: home, admin: admin %}
+    </footer>
+  </body>
+</html>

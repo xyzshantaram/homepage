@@ -1,0 +1,86 @@
+{% layout "base.liquid" %}
+{% block title %}shantaram.xyz | {{ title | escape }}{% endblock %}
+
+{% block content %}
+<h1>{{ title | escape }}</h1>
+<p class="cta"><a href="/posts" class="muted">Back to posts</a></p>
+
+<div class="post-date">{{ dateLabel }}</div>
+
+<div class="tag-row">
+  {% for tag in tags %}
+  <a class="tag" href="/posts?tags={{ tag | url_encode }}" target="_blank" rel="noopener">{{ tag | escape }}</a>
+  {% endfor %}
+</div>
+
+<div class="post-body content">
+{{ body }}
+</div>
+
+<hr class="comment-separator">
+
+<section id="comments" class="comments">
+  <h2>Comments</h2>
+
+  <h3>Leave a comment</h3>
+  <form class="comment-form" method="post" action="{{ url }}/comment">
+    <div class="comment-name-row">
+      <label for="comment-author">Name</label>
+      <input
+        id="comment-author"
+        name="author"
+        maxlength="40"
+        placeholder="Anonymous"
+      />
+    </div>
+
+    <div class="comment-text-row">
+      <label for="comment-content">Comment</label>
+      <textarea
+        id="comment-content"
+        name="content"
+        required
+        placeholder="Leave your thoughts! Markdown is supported."
+      ></textarea>
+    </div>
+
+    <cap-widget
+      id="cap"
+      data-cap-api-endpoint="/api/v1/captcha/"
+      data-cap-hidden-field-name="captcha"
+    ></cap-widget>
+
+    <button type="submit" class="outlined">Post</button>
+  </form>
+
+  {% for comment in comments %}
+  <article class="comment surface" id="comment-{{ comment.id }}">
+    <div class="comment-meta">
+      <span class="comment-author">{{ comment.author | default: "Anonymous" | escape }}</span>
+      <div class="comment-actions">
+        <button type="button" class="comment-reply">Reply</button>
+        <time class="muted" datetime="{{ comment.postedIso }}">{{ comment.postedAgo }}</time>
+        {% if admin %}
+        <form method="post" action="/api/v1/admin" class="comment-delete-form">
+          <input type="hidden" name="action" value="delete-comment">
+          <input type="hidden" name="id" value="{{ comment.id }}">
+          <input type="hidden" name="csrf" value="{{ csrf | escape }}">
+          <input type="hidden" name="next" value="{{ url | escape }}">
+          <button type="submit" class="comment-delete">Delete</button>
+        </form>
+        {% endif %}
+      </div>
+    </div>
+    <div class="comment-body">{{ comment.content }}</div>
+  </article>
+  {% endfor %}
+
+  {% if comments.size == 0 %}
+  <p class="muted">No comments yet. Be the first to leave one.</p>
+  {% endif %}
+</section>
+
+<script src="/static/comments.js" defer></script>
+<script src="/static/confirm-delete.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/@cap.js/widget"></script>
+{% endblock %}

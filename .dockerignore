@@ -5,7 +5,7 @@ todo
 README.md
 Dockerfile
 .dockerignore
-# Not part of the site. The root Dockerfile does `COPY . .`, so anything not
-# listed here is served publicly at its repo path.
-prototypes
-PLAN.md
+node_modules
+scratch
+data
+.env

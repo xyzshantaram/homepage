@@ -1,0 +1,10 @@
+{% layout "base.liquid" %}
+{% block title %}shantaram.xyz | {{ title | escape }}{% endblock %}
+
+{% block content %}
+<h1>{{ title }}</h1>
+
+<div class="page-body content">
+{{ body }}
+</div>
+{% endblock %}

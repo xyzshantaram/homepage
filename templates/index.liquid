@@ -1,0 +1,32 @@
+{% layout "base.liquid" %}
+{% block title %}shan's corner{% endblock %}
+
+{% block content %}
+<h1>Hello</h1>
+
+<p>I'm shantaram.</p>
+
+{% render "nav.partial.liquid", home: home, admin: admin %}
+
+<img src="/static/pfp-replaceme.jpg" alt="me" class="avatar" />
+
+<p>
+  I'm a maker and storyteller with 4+ years of full-stack web development.
+  My core belief is that software and systems should fit and work for
+  <em>people</em>, never the other way around.
+</p>
+
+<p>
+  My latest project is
+  <a href="https://trythursday.org">Thursday</a>.
+</p>
+
+<div class="post-heading-wrapper">
+  <h2 class="page-section">Posts</h2>
+  <div class="cta"><a href="/posts" class="muted">See all</a></div>
+</div>
+
+{% for post in posts %}
+{% render "post.partial.liquid" title: post.title url: post.url description: post.description tags: post.tags date: post.dateLabel %}
+{% endfor %}
+{% endblock %}
