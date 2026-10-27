@@ -1,7 +1,7 @@
 import Cap from "@cap.js/server";
 import { mkdirSync } from "node:fs";
 import { dirname, resolve } from "node:path";
-import { CHALLENGE_CONFIG } from "./utils";
+import { CHALLENGE_CONFIG } from "./index";
 
 export class Captcha {
   private cap: Cap;
