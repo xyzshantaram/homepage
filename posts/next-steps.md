@@ -1,7 +1,6 @@
 ---
 title: "Next Steps"
 description: "an experiment in using generative AI in a non-chat form"
-hidden: true
 created-date: 2026-10-23
 tags:
   - technical
