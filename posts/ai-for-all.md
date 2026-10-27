@@ -1,10 +1,10 @@
 ---
 title: "AI For All"
 description: "a free, captcha-gated proxy for AI inference"
-hidden: true
 created-date: 2026-10-19
 tags:
   - technical
+  - projects
 ---
 
 ## AI For All
