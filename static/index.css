@@ -223,10 +223,66 @@ select:focus {
 
 .bmc-qr-wrapper img {
   max-height: 50vh;
-  width: auto;
+  width: min(100%, 50vh);
+  aspect-ratio: auto 1 / 1;
 }
 
 .donate-btczap {
   display: flex;
   justify-content: center;
+}
+
+/*
+ * Skeletons: reserve the rendered size of late-loading widgets so the page
+ * doesn't shift when they upgrade. Sizes were measured from the rendered
+ * widgets. Styled with fieber's --c-surface.
+ */
+@keyframes skeleton-pulse {
+  50% {
+    opacity: 0.55;
+  }
+}
+
+services-estimate:not(:defined),
+bmc-button:not(:defined),
+.btczap-widget:empty {
+  display: block;
+  box-sizing: border-box;
+  background-color: var(--c-surface);
+  border-radius: 0.5rem;
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+services-estimate:not(:defined) {
+  min-height: 1040px;
+}
+
+@media (min-width: 640px) {
+  services-estimate:not(:defined) {
+    min-height: 875px;
+  }
+}
+
+bmc-button:not(:defined) {
+  width: 262px;
+  height: 60px;
+}
+
+.btczap-widget:empty {
+  width: min(100%, 340px);
+  min-height: 300px;
+}
+
+@media (min-width: 640px) {
+  .btczap-widget:empty {
+    min-height: 269px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  services-estimate:not(:defined),
+  bmc-button:not(:defined),
+  .btczap-widget:empty {
+    animation: none;
+  }
 }
