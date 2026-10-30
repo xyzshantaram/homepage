@@ -61,7 +61,7 @@ function createMarkdown(html: boolean) {
   return markdown;
 }
 
-const markdown = createMarkdown(false);
+const markdown = createMarkdown(true);
 const pageMarkdown = createMarkdown(true);
 
 async function render(

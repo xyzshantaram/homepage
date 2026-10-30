@@ -93,6 +93,51 @@ describe("http routes", () => {
 
   afterEach(() => cleanup(root));
 
+  test("accepts legacy and modern CSP reports", async () => {
+    const app = createApp(makeConfig(root));
+
+    const legacy = await app.request("/api/v1/csp-report", {
+      method: "POST",
+      headers: { "content-type": "application/csp-report" },
+      body: JSON.stringify({
+        "csp-report": {
+          "violated-directive": "script-src",
+          "blocked-uri": "https://evil.example/x.js",
+          "document-uri": "https://shantaram.xyz/",
+        },
+      }),
+    });
+    expect(legacy.status).toBe(204);
+
+    const modern = await app.request("/api/v1/csp-report", {
+      method: "POST",
+      headers: { "content-type": "application/reports+json" },
+      body: JSON.stringify([
+        {
+          type: "csp-violation",
+          body: {
+            effectiveDirective: "connect-src",
+            blockedURL: "https://evil.example/api",
+            documentURL: "https://shantaram.xyz/",
+          },
+        },
+      ]),
+    });
+    expect(modern.status).toBe(204);
+  });
+
+  test("advertises the report endpoint in the policy", async () => {
+    const app = createApp(makeConfig(root));
+    const response = await app.request("/");
+
+    expect(response.headers.get("reporting-endpoints")).toContain(
+      "/api/v1/csp-report",
+    );
+    expect(response.headers.get("content-security-policy")).toContain(
+      "report-uri /api/v1/csp-report",
+    );
+  });
+
   test("webhook verifies the signature and filters refs", async () => {
     const app = createApp(makeConfig(root));
     const hook = "/api/v1/admin/posts/hook";

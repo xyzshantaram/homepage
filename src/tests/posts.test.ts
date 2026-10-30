@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, test } from "bun:test";
+import { writeFileSync } from "node:fs";
 import path from "node:path";
 import { FilePostStorage } from "../storages/PostStorage";
 import { createApp } from "../app";
@@ -270,17 +271,39 @@ describe("post routes", () => {
     expect(xml).not.toContain("\u0000");
   });
 
+  test("loads post components and allows their origins in the CSP", async () => {
+    writePost(root, {
+      file: "embed.md",
+      title: "Embed",
+      date: "2024-06-07",
+      components: ["./embed.js"],
+      body: '<reformed-vibe-coders endpoint="https://pledge.example.com/api"></reformed-vibe-coders>',
+    });
+    writeFileSync(
+      path.join(root, "posts/embed.js"),
+      'import "https://esm.example.com/core";\n',
+    );
+
+    const response = await app().request("/posts/2024/06/embed");
+    const html = await response.text();
+    const csp = response.headers.get("content-security-policy") ?? "";
+
+    expect(html).toContain('<script type="module" src="/media/');
+    expect(html).toContain("<reformed-vibe-coders");
+    expect(csp).toContain("https://pledge.example.com");
+    expect(csp).toContain("https://esm.example.com");
+  });
+
   test("sets security headers and loads analytics", async () => {
     const response = await app().request("/");
     const html = await response.text();
 
     expect(response.headers.get("x-frame-options")).toBe("DENY");
-    expect(response.headers.get("content-security-policy")).toContain(
-      "script-src 'self' https://cdn.jsdelivr.net",
-    );
-    expect(response.headers.get("content-security-policy")).toContain(
-      "https://analytics.shantaram.xyz",
-    );
+    const csp = response.headers.get("content-security-policy") ?? "";
+
+    expect(csp).toContain("script-src 'self'");
+    expect(csp).toContain("https://cdn.jsdelivr.net");
+    expect(csp).toContain("https://analytics.shantaram.xyz");
     expect(html).toContain(
       'src="https://analytics.shantaram.xyz/script.js"',
     );

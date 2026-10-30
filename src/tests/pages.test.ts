@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, test } from "bun:test";
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, readdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { createApp } from "../app";
 import { ComponentStore } from "../storages/ComponentStore";
@@ -89,24 +89,26 @@ describe("ComponentStore", () => {
   });
   afterEach(() => cleanup(root));
 
-  test("fetches and caches remote components", async () => {
+  test("links remote components and records their origins", async () => {
     const server = Bun.serve({
       port: 0,
       fetch: () =>
-        new Response("customElements.define('x', class extends HTMLElement {});"),
+        new Response('import "https://esm.example.com/core";'),
     });
 
     try {
       const media = path.join(root, "media");
       const store = new ComponentStore(media, root);
-      const url = await store.resolve(
-        `http://127.0.0.1:${server.port}/x.js`,
-        path.join(root, "pages"),
-      );
-      expect(url).toMatch(/^\/media\/[a-f0-9]+\.js$/);
+      const src = `http://127.0.0.1:${server.port}/x.js`;
+
       expect(
-        readFileSync(path.join(media, path.basename(url)), "utf8"),
-      ).toContain("customElements");
+        await store.resolve(src, path.join(root, "pages")),
+      ).toBe(src);
+      expect(readdirSync(media)).toEqual([]);
+
+      const origins = store.scriptOrigins([src]);
+      expect(origins).toContain(`http://127.0.0.1:${server.port}`);
+      expect(origins).toContain("https://esm.example.com");
     } finally {
       server.stop(true);
     }

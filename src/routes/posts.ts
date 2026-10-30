@@ -4,6 +4,7 @@ import { format } from "timeago.js";
 import { commentSchema, renderComment } from "../storages/comments";
 import { sessionFromRequest } from "../admin";
 import { sameOrigin } from "../utils/origin";
+import { connectOrigins, setCsp } from "../utils/csp";
 import { makeLimiter } from "../utils/rate-limit";
 import {
   COMMENT_BODY_LIMIT,
@@ -82,6 +83,11 @@ export function PostRoute(deps: Deps): Route {
       }
 
       const body = await deps.posts.render(post);
+      const components = await deps.posts.resolveComponents(post);
+      setCsp(c, {
+        script: deps.components.scriptOrigins(components),
+        connect: connectOrigins(body),
+      });
       const comments = deps.comments.getForPost(post.url).map((comment) => ({
         ...comment,
         postedIso: new Date(comment.posted).toISOString(),
@@ -92,6 +98,7 @@ export function PostRoute(deps: Deps): Route {
       return c.html(
         await deps.liquid.renderFile("post.liquid", {
           ...post,
+          components,
           body,
           comments,
           admin: Boolean(admin),

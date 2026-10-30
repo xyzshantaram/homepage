@@ -1,5 +1,6 @@
 import type { Context } from "hono";
 import { sessionFromRequest } from "../admin";
+import { connectOrigins, setCsp } from "../utils/csp";
 import type { Deps, Route } from "../utils";
 
 const REDIRECTS = [
@@ -18,11 +19,16 @@ export function PageRoutes(deps: Deps): Route[] {
 
     const admin = Boolean(sessionFromRequest(c, deps.admin));
     const components = await deps.pages.resolveComponents(entry);
+    const body = await deps.pages.render(entry);
+    setCsp(c, {
+      script: deps.components.scriptOrigins(components),
+      connect: connectOrigins(body),
+    });
     return c.html(
       await deps.liquid.renderFile("page.liquid", {
         ...entry,
         components,
-        body: await deps.pages.render(entry),
+        body,
         admin,
       }),
     );

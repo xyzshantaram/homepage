@@ -5,6 +5,7 @@ import type { Liquid } from "liquidjs";
 import type { AdminStore } from "../storages/AdminStore";
 import type { Captcha } from "./captcha";
 import type { CommentStore } from "../storages/comments";
+import type { ComponentStore } from "../storages/ComponentStore";
 
 export type Route = [path: string, ...handlers: Handler[]];
 
@@ -17,6 +18,7 @@ export type Post = {
   tags: string[];
   hidden: boolean;
   url: string;
+  components: string[];
 };
 
 const MONTHS = [
@@ -72,6 +74,7 @@ export interface PostStorage {
   list(): Promise<Post[]>;
   get(year: string, month: string, slug: string): Promise<Post | undefined>;
   render(post: Post): Promise<string>;
+  resolveComponents(post: Post): Promise<string[]>;
   refresh?(): Promise<void>;
 }
 
@@ -116,6 +119,7 @@ export type Deps = {
   liquid: Liquid;
   posts: PostStorage;
   pages: PageStorage;
+  components: ComponentStore;
   comments: CommentStore;
   captcha: Captcha;
   admin: AdminStore;
@@ -131,6 +135,7 @@ export const MAX_COMMENT_LENGTH = 4000;
 export const WEBHOOK_BODY_LIMIT = 1024 * 1024;
 export const COMMENT_BODY_LIMIT = 64 * 1024;
 export const CAPTCHA_BODY_LIMIT = 16 * 1024;
+export const CSP_REPORT_BODY_LIMIT = 16 * 1024;
 
 export const DEFAULT_PORT = 3000;
 export const DEFAULT_SITE_URL = "https://shantaram.xyz";
@@ -146,6 +151,7 @@ export const DEFAULT_NOSTR_RELAYS = [
 
 export const COMMENT_RATE_LIMIT = { limit: 1, windowMs: 60_000 };
 export const CAPTCHA_RATE_LIMIT = { limit: 5, windowMs: 10_000 };
+export const CSP_REPORT_RATE_LIMIT = { limit: 60, windowMs: 60_000 };
 
 export const CHALLENGE_CONFIG = {
   challengeCount: 75,

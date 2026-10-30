@@ -9,6 +9,7 @@ import { CommentStore } from "./storages/comments";
 import { AdminStore } from "./storages/AdminStore";
 import { adminNpubForDisplay, sessionFromRequest } from "./admin";
 import { ComponentStore } from "./storages/ComponentStore";
+import { buildCsp, getCsp } from "./utils/csp";
 import { ImageStore } from "./storages/ImageStore";
 import { FilePageStorage } from "./storages/PageStorage";
 import { FilePostStorage } from "./storages/PostStorage";
@@ -17,6 +18,7 @@ import {
   AdminPageRoute,
   ChallengeRoute,
   CommentRoute,
+  CspReportRoute,
   HomeRoute,
   PageRoutes,
   PostRoute,
@@ -40,12 +42,13 @@ export function createApp(config: Config, adminName?: string) {
       root: [path.join(root, "templates")],
       extname: ".liquid",
     }),
-    posts: new FilePostStorage(config.postsDir, images),
+    posts: new FilePostStorage(config.postsDir, images, components),
     pages: new FilePageStorage(
       path.join(contentRoot, "pages"),
       images,
       components,
     ),
+    components,
     comments: new CommentStore(config.commentsDb),
     captcha: new Captcha(config.capState),
     admin: new AdminStore(config.commentsDb),
@@ -58,21 +61,8 @@ export function createApp(config: Config, adminName?: string) {
     c.header("X-Content-Type-Options", "nosniff");
     c.header("X-Frame-Options", "DENY");
     c.header("Referrer-Policy", "strict-origin-when-cross-origin");
-    c.header(
-      "Content-Security-Policy",
-      [
-        "default-src 'self'",
-        "script-src 'self' https://cdn.jsdelivr.net https://cdnjs.buymeacoffee.com https://btczap.io https://esm.sh https://analytics.shantaram.xyz",
-        "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com",
-        "img-src 'self' data: https:",
-        "font-src 'self' https://fonts.gstatic.com",
-        "connect-src 'self' https://btczap.io https://*.btczap.io https://analytics.shantaram.xyz",
-        "frame-src 'self' https://btczap.io https://*.btczap.io",
-        "base-uri 'self'",
-        "form-action 'self'",
-        "frame-ancestors 'none'",
-      ].join("; "),
-    );
+    c.header("Content-Security-Policy", buildCsp(getCsp(c)));
+    c.header("Reporting-Endpoints", 'csp="/api/v1/csp-report"');
   });
 
   app.get(...HomeRoute(deps));
@@ -92,6 +82,7 @@ export function createApp(config: Config, adminName?: string) {
 
   app.post(...ChallengeRoute(deps));
   app.post(...RedeemRoute(deps));
+  app.post(...CspReportRoute());
   app.post(...PostsWebhookRoute(deps));
 
   app.onError(async (error, c) => {

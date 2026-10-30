@@ -6,6 +6,7 @@ import { promisify } from "node:util";
 import { z } from "zod";
 import { excerpt, renderMarkdown } from "../utils/markdown";
 import type { ImageStore } from "./ImageStore";
+import type { ComponentStore } from "./ComponentStore";
 import { formatPostDate, type Post, type PostStorage } from "../utils";
 
 const exec = promisify(execFile);
@@ -46,6 +47,7 @@ export class FilePostStorage implements PostStorage {
   constructor(
     private readonly dir: string,
     private readonly images?: ImageStore,
+    private readonly components?: ComponentStore,
   ) {}
 
   async refresh(): Promise<void> {
@@ -84,6 +86,11 @@ export class FilePostStorage implements PostStorage {
               : [],
           hidden: data.hidden === true,
           url: `/posts/${createdDate.slice(0, 4)}/${createdDate.slice(5, 7)}/${slug}`,
+          components: Array.isArray(data.components)
+            ? data.components.map(String)
+            : data.components
+              ? [String(data.components)]
+              : [],
         };
         return [slug, { post, source: content }] as const;
       }),
@@ -138,5 +145,14 @@ export class FilePostStorage implements PostStorage {
       this.images ? (src) => this.images!.resolve(src, this.dir) : undefined,
     );
     return entry.rendered;
+  }
+
+  async resolveComponents(post: Post): Promise<string[]> {
+    if (!this.components) {
+      return post.components;
+    }
+    return Promise.all(
+      post.components.map((src) => this.components!.resolve(src, this.dir)),
+    );
   }
 }

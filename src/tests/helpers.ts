@@ -10,6 +10,7 @@ export type PostFixture = {
   tags?: string[];
   hidden?: boolean;
   description?: string;
+  components?: string[];
   body?: string;
 };
 
@@ -34,6 +35,14 @@ export function writePost(root: string, fixture: PostFixture): void {
     `created-date: ${fixture.date}`,
     `tags: [${(fixture.tags ?? []).join(", ")}]`,
     fixture.hidden ? "hidden: true" : null,
+    ...(fixture.components?.length
+      ? [
+          "components:",
+          ...fixture.components.map(
+            (component) => `  - ${JSON.stringify(component)}`,
+          ),
+        ]
+      : []),
     "---",
     "",
     fixture.body ?? "",
