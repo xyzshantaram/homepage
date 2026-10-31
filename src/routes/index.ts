@@ -1,6 +1,7 @@
 export {
   AdminApiRoute,
   AdminPageRoute,
+  OrphanedMediaRoute,
   PostsWebhookRoute,
 } from "./admin";
 export { ChallengeRoute, RedeemRoute } from "./captcha";

@@ -16,6 +16,7 @@ import { FilePostStorage } from "./storages/PostStorage";
 import {
   AdminApiRoute,
   AdminPageRoute,
+  OrphanedMediaRoute,
   ChallengeRoute,
   CommentRoute,
   CspReportRoute,
@@ -48,6 +49,7 @@ export function createApp(config: Config, adminName?: string) {
       images,
       components,
     ),
+    images,
     components,
     comments: new CommentStore(config.commentsDb),
     captcha: new Captcha(config.capState),
@@ -71,6 +73,7 @@ export function createApp(config: Config, adminName?: string) {
   app.post(...CommentRoute(deps));
   app.get(...AdminPageRoute(deps));
   app.post(...AdminApiRoute(deps));
+  app.get(...OrphanedMediaRoute(deps));
 
   for (const route of PageRoutes(deps)) {
     app.get(...route);

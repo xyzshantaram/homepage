@@ -43,6 +43,47 @@
 </nav>
 {% endif %}
 
+<h2>Orphaned media</h2>
+
+{% if orphanedMedia.size == 0 %}
+<p class="muted">None.</p>
+{% else %}
+<p class="muted">{{ orphanedMedia.size }} files, {{ orphanedBytes }} total.</p>
+<table class="orphan-table">
+  <thead>
+    <tr>
+      <th>File</th>
+      <th>Type</th>
+      <th>Size</th>
+      <th>Modified</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for file in orphanedMedia %}
+    <tr>
+      <td>
+        <a href="{{ file.url | escape }}" target="_blank" rel="noreferrer" title="{{ file.name | escape }}">{{ file.short | escape }}</a>
+      </td>
+      <td>{{ file.type | escape }}</td>
+      <td>{{ file.sizeLabel | escape }}</td>
+      <td>{{ file.modifiedAgo | escape }}</td>
+      <td class="orphan-actions">
+        <form method="post" action="/api/v1/admin" class="orphan-delete-form">
+          <input type="hidden" name="action" value="delete-media">
+          <input type="hidden" name="name" value="{{ file.name | escape }}">
+          <input type="hidden" name="csrf" value="{{ csrf | escape }}">
+          <input type="hidden" name="next" value="/admin">
+          <button type="submit">Delete</button>
+        </form>
+        <button type="button" class="orphan-download" data-url="{{ file.url | escape }}">Download</button>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
 <script src="/static/confirm-delete.js" defer></script>
 {% else %}
 <div class="surface admin-login">

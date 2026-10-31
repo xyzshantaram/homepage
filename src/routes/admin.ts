@@ -45,6 +45,17 @@ function cookieOptions(c: Context) {
   };
 }
 
+function formatBytes(bytes: number): string {
+  const units = ["K", "M", "G", "T"];
+  let value = bytes / 1024;
+  let unit = 0;
+  while (value >= 1024 && unit < units.length - 1) {
+    value /= 1024;
+    unit += 1;
+  }
+  return `${value.toFixed(unit === 2 ? 2 : 1)}${units[unit]}`;
+}
+
 function safeNext(value: unknown): string {
   return typeof value === "string" &&
     value.startsWith("/") &&
@@ -106,6 +117,13 @@ async function handleForm(deps: Deps, c: Context) {
     return c.redirect(safeNext(body.next), 303);
   }
 
+  if (body.action === "delete-media") {
+    if (typeof body.name === "string") {
+      await deps.images.deleteOrphan(body.name);
+    }
+    return c.redirect(safeNext(body.next), 303);
+  }
+
   if (body.action === "logout") {
     deps.admin.deleteSession(session.token);
     deleteCookie(c, ADMIN_SESSION_COOKIE, { path: "/" });
@@ -155,6 +173,7 @@ export function PostsWebhookRoute(deps: Deps): Route {
 
       try {
         await deps.posts.refresh?.();
+        await deps.images.recomputeOrphans();
         return c.json({ ok: true });
       } catch (error) {
         return c.json({ ok: false, error: (error as Error).message }, 500);
@@ -210,6 +229,17 @@ export function AdminPageRoute(deps: Deps): Route {
           postedAgo: format(comment.posted),
         }));
 
+      const orphanedMedia = (await deps.images.orphans()).map((file) => ({
+        ...file,
+        short: `${file.name.slice(0, 12)}…`,
+        sizeLabel: formatBytes(file.bytes),
+        modifiedIso: new Date(file.modified).toISOString(),
+        modifiedAgo: format(file.modified),
+      }));
+      const orphanedBytes = formatBytes(
+        orphanedMedia.reduce((total, file) => total + file.bytes, 0),
+      );
+
       return c.html(
         await deps.liquid.renderFile("admin.liquid", {
           loggedIn: true,
@@ -217,6 +247,8 @@ export function AdminPageRoute(deps: Deps): Route {
           csrf: session.csrf,
           adminName: deps.adminName,
           comments,
+          orphanedMedia,
+          orphanedBytes,
           page,
           pages,
           pageUrl,
@@ -224,6 +256,32 @@ export function AdminPageRoute(deps: Deps): Route {
           nextUrl: page < pages ? `/admin?page=${page + 1}` : null,
         }),
       );
+    },
+  ];
+}
+
+export function OrphanedMediaRoute(deps: Deps): Route {
+  return [
+    "/api/v1/admin/orphaned-media",
+    async (c: Context) => {
+      const session = sessionFromRequest(c, deps.admin);
+      if (!session) {
+        return c.json({ success: false, error: { code: "Unauthorized" } }, 401);
+      }
+
+      const orphaned = await deps.images.orphans();
+      return c.json({
+        success: true,
+        totalBytes: orphaned.reduce((total, file) => total + file.bytes, 0),
+        orphaned: orphaned.map((file) => ({
+          name: file.name,
+          url: file.url,
+          type: file.type,
+          bytes: file.bytes,
+          size: formatBytes(file.bytes),
+          modified: new Date(file.modified).toISOString(),
+        })),
+      });
     },
   ];
 }

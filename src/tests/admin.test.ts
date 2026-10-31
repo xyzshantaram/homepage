@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, test } from "bun:test";
+import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import {
   finalizeEvent,
@@ -113,6 +114,11 @@ describe("admin routes", () => {
     const config = makeConfig(root, { adminNpub: npub });
     const app = createApp(config);
 
+    const orphanName = `${"b".repeat(64)}.mp4`;
+    const mediaDir = path.join(root, "media");
+    mkdirSync(mediaDir, { recursive: true });
+    writeFileSync(path.join(mediaDir, orphanName), Buffer.alloc(4096));
+
     const comments = new CommentStore(config.commentsDb);
     for (let index = 0; index < 31; index += 1) {
       comments.add({
@@ -160,6 +166,18 @@ describe("admin routes", () => {
     expect(html1).toContain("Signed in as");
     expect(html1).toContain(`@${npub.slice(0, 12)}`);
     expect(html1).toContain("Sign out");
+    expect(html1).toContain("Orphaned media");
+
+    const orphaned = await app.request("/api/v1/admin/orphaned-media", {
+      headers: { cookie },
+    });
+    expect(orphaned.status).toBe(200);
+    expect(Array.isArray((await orphaned.json()).orphaned)).toBe(true);
+
+    const anonymousOrphaned = await app.request(
+      "/api/v1/admin/orphaned-media",
+    );
+    expect(anonymousOrphaned.status).toBe(401);
 
     const page2 = await app.request("/admin?page=2", { headers: { cookie } });
     const html2 = await page2.text();
@@ -185,6 +203,25 @@ describe("admin routes", () => {
     expect(deleted.status).toBe(303);
     expect(deleted.headers.get("location")).toBe("/admin");
     expect(comments.listAll()).toHaveLength(30);
+
+    expect(html1).toContain('class="orphan-table"');
+    expect(html1).toContain(orphanName.slice(0, 12));
+
+    const mediaDelete = await app.request("/api/v1/admin", {
+      method: "POST",
+      headers: {
+        cookie,
+        "content-type": "application/x-www-form-urlencoded",
+      },
+      body: new URLSearchParams({
+        action: "delete-media",
+        name: orphanName,
+        csrf: csrf ?? "",
+        next: "/admin",
+      }).toString(),
+    });
+    expect(mediaDelete.status).toBe(303);
+    expect(existsSync(path.join(mediaDir, orphanName))).toBe(false);
 
     const replay = await app.request("/api/v1/admin", {
       method: "POST",

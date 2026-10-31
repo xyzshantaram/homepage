@@ -6,6 +6,7 @@ import type { AdminStore } from "../storages/AdminStore";
 import type { Captcha } from "./captcha";
 import type { CommentStore } from "../storages/comments";
 import type { ComponentStore } from "../storages/ComponentStore";
+import type { ImageStore } from "../storages/ImageStore";
 
 export type Route = [path: string, ...handlers: Handler[]];
 
@@ -119,6 +120,7 @@ export type Deps = {
   liquid: Liquid;
   posts: PostStorage;
   pages: PageStorage;
+  images: ImageStore;
   components: ComponentStore;
   comments: CommentStore;
   captcha: Captcha;

@@ -1,7 +1,16 @@
 import { createHash } from "node:crypto";
 import { execFile } from "node:child_process";
 import { mkdirSync } from "node:fs";
-import { access, mkdir, rename, rm, writeFile } from "node:fs/promises";
+import {
+  access,
+  mkdir,
+  readdir,
+  readFile,
+  rename,
+  rm,
+  stat,
+  writeFile,
+} from "node:fs/promises";
 import path from "node:path";
 import { promisify } from "node:util";
 import ffmpegPath from "ffmpeg-static";
@@ -16,8 +25,20 @@ const VIDEO_EXT = /\.(webm|mp4)$/i;
 const SCALE = "scale=-2:trunc(min(720\\,ih)/2)*2";
 
 const exec = promisify(execFile);
+const MEDIA_NAME = /^[0-9a-f]{64}\.(webp|webm|mp4)$/;
+const IMAGE_REF = /!\[[^\]]*\]\(\s*<?([^)\s>]+)/g;
+
+export type OrphanedMedia = {
+  name: string;
+  url: string;
+  type: string;
+  bytes: number;
+  modified: number;
+};
+
 export class ImageStore {
   private readonly resolved = new Map<string, string | ResolvedMedia>();
+  private orphansPromise?: Promise<OrphanedMedia[]>;
 
   constructor(
     private readonly mediaDir: string,
@@ -188,5 +209,136 @@ export class ImageStore {
       ],
       options,
     );
+  }
+
+  async orphans(): Promise<OrphanedMedia[]> {
+    this.orphansPromise ??= this.findOrphans();
+    try {
+      return await this.orphansPromise;
+    } catch (error) {
+      this.orphansPromise = undefined;
+      throw error;
+    }
+  }
+
+  recomputeOrphans(): Promise<OrphanedMedia[]> {
+    this.orphansPromise = this.findOrphans();
+    return this.orphans();
+  }
+
+  async deleteOrphan(name: string): Promise<boolean> {
+    if (!MEDIA_NAME.test(name)) {
+      return false;
+    }
+
+    const orphans = await this.orphans();
+    if (!orphans.some((file) => file.name === name)) {
+      return false;
+    }
+
+    try {
+      await rm(path.join(this.mediaDir, name));
+      this.orphansPromise = undefined;
+      return true;
+    } catch (error) {
+      console.error(`[images] failed to delete ${name}`, error);
+      return false;
+    }
+  }
+
+  private async findOrphans(): Promise<OrphanedMedia[]> {
+    const referenced = await this.referencedMedia();
+    const entries = await readdir(this.mediaDir, {
+      withFileTypes: true,
+    }).catch(() => []);
+    const orphans: OrphanedMedia[] = [];
+
+    for (const entry of entries) {
+      if (
+        !entry.isFile() ||
+        !MEDIA_NAME.test(entry.name) ||
+        referenced.has(entry.name)
+      ) {
+        continue;
+      }
+
+      const info = await stat(path.join(this.mediaDir, entry.name));
+      orphans.push({
+        name: entry.name,
+        url: `/media/${entry.name}`,
+        type: path.extname(entry.name).slice(1),
+        bytes: info.size,
+        modified: info.mtimeMs,
+      });
+    }
+
+    return orphans.sort((a, b) => b.bytes - a.bytes);
+  }
+
+  private async referencedMedia(): Promise<Set<string>> {
+    const referenced = new Set<string>();
+    const files = await this.markdownFiles(this.contentRoot);
+
+    await Promise.all(
+      files.map(async (file) => {
+        let source: string;
+        try {
+          source = await readFile(file, "utf8");
+        } catch {
+          return;
+        }
+
+        const refs = [...source.matchAll(IMAGE_REF)].map((match) => match[1]);
+        await Promise.all(
+          refs.map(async (ref) => {
+            const buffer = await loadContentSource(
+              ref,
+              path.dirname(file),
+              this.contentRoot,
+              VIDEO_MAX_BYTES,
+            );
+            if (!buffer) {
+              return;
+            }
+
+            const hash = createHash("sha256").update(buffer).digest("hex");
+            if (VIDEO_EXT.test(ref.split(/[?#]/)[0])) {
+              referenced.add(`${hash}.webm`);
+              referenced.add(`${hash}.mp4`);
+            } else {
+              referenced.add(`${hash}.webp`);
+            }
+          }),
+        );
+      }),
+    );
+
+    return referenced;
+  }
+
+  private async markdownFiles(dir: string): Promise<string[]> {
+    const found: string[] = [];
+
+    const walk = async (current: string): Promise<void> => {
+      const entries = await readdir(current, { withFileTypes: true }).catch(
+        () => [],
+      );
+      await Promise.all(
+        entries.map(async (entry) => {
+          if (entry.name.startsWith(".")) {
+            return;
+          }
+          const full = path.join(current, entry.name);
+          if (entry.isDirectory()) {
+            await walk(full);
+          } else if (entry.isFile() && entry.name.endsWith(".md")) {
+            found.push(full);
+          }
+        }),
+      );
+    };
+
+    await walk(dir);
+    return found;
   }
 }

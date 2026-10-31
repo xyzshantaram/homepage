@@ -161,6 +161,45 @@ describe("ImageStore", () => {
     expect(html).toContain("<figcaption>Clip</figcaption>");
   });
 
+  test("lists media that no content references", async () => {
+    writeFileSync(path.join(postsDir, "local.png"), PNG);
+    writePost(root, {
+      file: "image-post.md",
+      title: "Image Post",
+      date: "2024-01-02",
+      body: "![Alt](./local.png)",
+    });
+    await store.resolve("./local.png", postsDir);
+
+    const orphanName = `${"a".repeat(64)}.webp`;
+    writeFileSync(path.join(mediaDir, orphanName), Buffer.alloc(2048));
+
+    const orphans = await store.orphans();
+    expect(orphans.map((file) => file.name)).toEqual([orphanName]);
+    expect(orphans[0].bytes).toBe(2048);
+    expect(orphans[0].url).toBe(`/media/${orphanName}`);
+  });
+
+  test("deletes only orphaned media", async () => {
+    writeFileSync(path.join(postsDir, "local.png"), PNG);
+    writePost(root, {
+      file: "image-post.md",
+      title: "Image Post",
+      date: "2024-01-02",
+      body: "![Alt](./local.png)",
+    });
+    await store.resolve("./local.png", postsDir);
+
+    const orphanName = `${"b".repeat(64)}.webp`;
+    writeFileSync(path.join(mediaDir, orphanName), Buffer.alloc(1024));
+
+    expect(await store.deleteOrphan(`${HASH}.webp`)).toBe(false);
+    expect(existsSync(path.join(mediaDir, `${HASH}.webp`))).toBe(true);
+
+    expect(await store.deleteOrphan(orphanName)).toBe(true);
+    expect(existsSync(path.join(mediaDir, orphanName))).toBe(false);
+  });
+
   test("serves cached media from the app", async () => {
     await store.resolve("./local.png", postsDir);
     const app = createApp(makeConfig(root));
