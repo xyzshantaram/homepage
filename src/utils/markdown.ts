@@ -2,7 +2,11 @@ import MarkdownIt from "markdown-it";
 import footnote from "markdown-it-footnote";
 import { escape } from "lodash";
 
-export type ImageResolver = (src: string) => Promise<string>;
+export type ResolvedMedia =
+  | string
+  | { video: { webm: string; mp4: string } };
+
+export type ImageResolver = (src: string) => Promise<ResolvedMedia>;
 
 function createMarkdown(html: boolean) {
   const markdown = new MarkdownIt({ html, linkify: true }).use(footnote);
@@ -21,6 +25,31 @@ function createMarkdown(html: boolean) {
   markdown.renderer.rules.image = (tokens, index, options, env, self) => {
     const token = tokens[index];
     const alt = self.renderInlineAsText(token.children ?? [], options, env);
+    const video = token.meta?.video as
+      | { webm: string; mp4: string }
+      | undefined;
+
+    if (video) {
+      const attributes = new Set(
+        (token.attrGet("title") ?? "")
+          .split(",")
+          .map((name: string) => name.trim().toLowerCase())
+          .filter(Boolean),
+      );
+      const flags = ['preload="metadata"', "playsinline"];
+      if (!attributes.has("nocontrols")) flags.push("controls");
+      for (const name of ["muted", "autoplay", "loop"]) {
+        if (attributes.has(name)) flags.push(name);
+      }
+      const sources =
+        `<source src="${escape(video.webm)}" type="video/webm">` +
+        `<source src="${escape(video.mp4)}" type="video/mp4">`;
+      return (
+        `<figure><video ${flags.join(" ")}>${sources}</video>` +
+        `<figcaption>${escape(alt)}</figcaption></figure>\n`
+      );
+    }
+
     token.attrSet("alt", alt);
     const image = self.renderToken(tokens, index, options);
     return `<figure>${image}<figcaption>${escape(alt)}</figcaption></figure>\n`;
@@ -92,7 +121,12 @@ async function render(
         const src = token.attrGet("src");
         if (!src) return;
         try {
-          token.attrSet("src", await resolveImage(src));
+          const resolved = await resolveImage(src);
+          if (typeof resolved === "string") {
+            token.attrSet("src", resolved);
+          } else {
+            token.meta = { ...(token.meta ?? {}), video: resolved.video };
+          }
         } catch {
           // keep the original source when the resolver fails
         }

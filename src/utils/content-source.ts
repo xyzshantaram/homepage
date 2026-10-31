@@ -7,6 +7,7 @@ export async function loadContentSource(
   src: string,
   baseDir: string,
   contentRoot: string,
+  maxBytes: number = MAX_BYTES,
 ): Promise<Buffer | undefined> {
   if (src.startsWith("/")) {
     const target = path.resolve(contentRoot, src.replace(/^\/+/, ""));
@@ -32,11 +33,11 @@ export async function loadContentSource(
       return undefined;
     }
     const length = Number(response.headers.get("content-length") ?? "0");
-    if (length > MAX_BYTES) {
+    if (length > maxBytes) {
       return undefined;
     }
     const buffer = Buffer.from(await response.arrayBuffer());
-    return buffer.length > MAX_BYTES ? undefined : buffer;
+    return buffer.length > maxBytes ? undefined : buffer;
   } catch {
     return undefined;
   }

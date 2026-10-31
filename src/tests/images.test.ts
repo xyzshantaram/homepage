@@ -1,7 +1,17 @@
 import { createHash } from "node:crypto";
-import { existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { execFileSync } from "node:child_process";
+import {
+  existsSync,
+  mkdirSync,
+  mkdtempSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
+import { tmpdir } from "node:os";
 import { afterEach, beforeEach, describe, expect, test } from "bun:test";
 import path from "node:path";
+import ffmpegPath from "ffmpeg-static";
 import sharp from "sharp";
 import { createApp } from "../app";
 import { ImageStore } from "../storages/ImageStore";
@@ -19,6 +29,31 @@ const PNG = await sharp({
   .png()
   .toBuffer();
 const HASH = createHash("sha256").update(PNG).digest("hex");
+
+const VIDEO = (() => {
+  const dir = mkdtempSync(path.join(tmpdir(), "homepage-video-"));
+  const file = path.join(dir, "clip.mp4");
+  execFileSync(
+    ffmpegPath!,
+    [
+      "-y",
+      "-f",
+      "lavfi",
+      "-i",
+      "testsrc=size=128x72:rate=5:duration=0.2",
+      "-c:v",
+      "libx264",
+      "-pix_fmt",
+      "yuv420p",
+      file,
+    ],
+    { stdio: "ignore" },
+  );
+  const buffer = readFileSync(file);
+  rmSync(dir, { recursive: true, force: true });
+  return buffer;
+})();
+const VIDEO_HASH = createHash("sha256").update(VIDEO).digest("hex");
 
 describe("ImageStore", () => {
   let root: string;
@@ -89,6 +124,41 @@ describe("ImageStore", () => {
     expect(html).toContain(`src="/media/${HASH}.webp"`);
     expect(html).toContain("<figure>");
     expect(html).toContain("<figcaption>Alt</figcaption>");
+  });
+
+  test("transcodes videos into webm and mp4", async () => {
+    writeFileSync(path.join(postsDir, "clip.mp4"), VIDEO);
+    const resolved = await store.resolve("./clip.mp4", postsDir);
+    expect(resolved).toEqual({
+      video: {
+        webm: `/media/${VIDEO_HASH}.webm`,
+        mp4: `/media/${VIDEO_HASH}.mp4`,
+      },
+    });
+    expect(existsSync(path.join(mediaDir, `${VIDEO_HASH}.webm`))).toBe(true);
+    expect(existsSync(path.join(mediaDir, `${VIDEO_HASH}.mp4`))).toBe(true);
+  });
+
+  test("renders video attributes from the title", async () => {
+    writeFileSync(path.join(postsDir, "clip.mp4"), VIDEO);
+    writePost(root, {
+      file: "video-post.md",
+      title: "Video Post",
+      date: "2024-01-02",
+      body: '![Clip](./clip.mp4 "muted,autoplay,loop,nocontrols")',
+    });
+    const storage = new FilePostStorage(postsDir, store);
+    const post = await storage.get("2024", "01", "video-post");
+    const html = await storage.render(post!);
+    expect(html).toContain(
+      `<source src="/media/${VIDEO_HASH}.webm" type="video/webm">`,
+    );
+    expect(html).toContain(
+      `<source src="/media/${VIDEO_HASH}.mp4" type="video/mp4">`,
+    );
+    expect(html).toContain("muted autoplay loop");
+    expect(html).not.toContain("controls");
+    expect(html).toContain("<figcaption>Clip</figcaption>");
   });
 
   test("serves cached media from the app", async () => {
