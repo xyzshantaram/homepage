@@ -157,6 +157,19 @@ export function renderPageMarkdown(
   return render(pageMarkdown, source, resolveImage);
 }
 
+const WORDS_PER_MINUTE = 220;
+
+export function readingMinutes(source: string): number {
+  const text = source
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, " ")
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1");
+  const words = text
+    .split(/\s+/)
+    .filter((word) => /\p{L}|\p{N}/u.test(word)).length;
+  return Math.max(1, Math.ceil(words / WORDS_PER_MINUTE));
+}
+
 export function excerpt(source: string): string {
   const text = source
     .replace(/```[\s\S]*?```/g, " ")

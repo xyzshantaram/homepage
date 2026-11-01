@@ -4,7 +4,7 @@ import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { promisify } from "node:util";
 import { z } from "zod";
-import { excerpt, renderMarkdown } from "../utils/markdown";
+import { excerpt, readingMinutes, renderMarkdown } from "../utils/markdown";
 import type { ImageStore } from "./ImageStore";
 import type { ComponentStore } from "./ComponentStore";
 import { formatPostDate, type Post, type PostStorage } from "../utils";
@@ -79,6 +79,7 @@ export class FilePostStorage implements PostStorage {
           description: String(data.description ?? excerpt(content)).trim(),
           createdDate,
           dateLabel: formatPostDate(createdDate),
+          readMinutes: readingMinutes(content),
           tags: Array.isArray(data.tags)
             ? data.tags.map(String)
             : data.tags

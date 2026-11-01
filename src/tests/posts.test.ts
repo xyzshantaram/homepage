@@ -122,6 +122,27 @@ describe("FilePostStorage", () => {
     expect(html).toContain("footnote-ref");
   });
 
+  test("estimates reading time at 220 words per minute", async () => {
+    writePost(root, {
+      file: "long.md",
+      title: "Long",
+      date: "2024-06-07",
+      body: Array.from({ length: 440 }, (_value, index) => `word${index}`).join(
+        " ",
+      ),
+    });
+    writePost(root, {
+      file: "short.md",
+      title: "Short",
+      date: "2024-06-08",
+      body: "Three words here.",
+    });
+
+    const storage = new FilePostStorage(path.join(root, "posts"));
+    expect((await storage.get("2024", "06", "long"))?.readMinutes).toBe(2);
+    expect((await storage.get("2024", "06", "short"))?.readMinutes).toBe(1);
+  });
+
   test("converts dashes, ellipses, and quotes", async () => {
     writePost(root, {
       file: "typography.md",

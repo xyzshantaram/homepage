@@ -16,6 +16,7 @@ export type Post = {
   description: string;
   createdDate: string;
   dateLabel: string;
+  readMinutes: number;
   tags: string[];
   hidden: boolean;
   url: string;

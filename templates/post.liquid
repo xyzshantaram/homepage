@@ -5,6 +5,11 @@
 <h1>{{ title | escape }}</h1>
 <p class="cta"><a href="/posts" class="muted">Back to posts</a></p>
 
+<div class="post-read-time muted">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock-4"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+  <span>{{ readMinutes }} min read</span>
+</div>
+
 <div class="post-date">{{ dateLabel }}</div>
 
 <div class="tag-row">
