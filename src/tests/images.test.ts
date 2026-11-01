@@ -139,6 +139,27 @@ describe("ImageStore", () => {
     expect(existsSync(path.join(mediaDir, `${VIDEO_HASH}.mp4`))).toBe(true);
   });
 
+  test("transcodes one video from two stores at once", async () => {
+    writeFileSync(path.join(postsDir, "clip.mp4"), VIDEO);
+    const other = new ImageStore(mediaDir, root);
+
+    const [first, second] = await Promise.all([
+      store.resolve("./clip.mp4", postsDir),
+      other.resolve("./clip.mp4", postsDir),
+    ]);
+
+    const expected = {
+      video: {
+        webm: `/media/${VIDEO_HASH}.webm`,
+        mp4: `/media/${VIDEO_HASH}.mp4`,
+      },
+    };
+    expect(first).toEqual(expected);
+    expect(second).toEqual(expected);
+    expect(existsSync(path.join(mediaDir, `${VIDEO_HASH}.webm`))).toBe(true);
+    expect(existsSync(path.join(mediaDir, `${VIDEO_HASH}.mp4`))).toBe(true);
+  });
+
   test("renders video attributes from the title", async () => {
     writeFileSync(path.join(postsDir, "clip.mp4"), VIDEO);
     writePost(root, {

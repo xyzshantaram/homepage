@@ -1,4 +1,4 @@
-import { createHash } from "node:crypto";
+import { createHash, randomBytes } from "node:crypto";
 import { execFile } from "node:child_process";
 import { mkdirSync } from "node:fs";
 import {
@@ -38,6 +38,7 @@ export type OrphanedMedia = {
 
 export class ImageStore {
   private readonly resolved = new Map<string, string | ResolvedMedia>();
+  private readonly pending = new Map<string, Promise<string | ResolvedMedia>>();
   private orphansPromise?: Promise<OrphanedMedia[]>;
 
   constructor(
@@ -54,6 +55,29 @@ export class ImageStore {
       return cached;
     }
 
+    const inflight = this.pending.get(key);
+    if (inflight) {
+      return inflight;
+    }
+
+    const promise = this.build(key, src, postDir);
+    this.pending.set(key, promise);
+    try {
+      return await promise;
+    } finally {
+      this.pending.delete(key);
+    }
+  }
+
+  forget(): void {
+    this.resolved.clear();
+  }
+
+  private async build(
+    key: string,
+    src: string,
+    postDir: string,
+  ): Promise<string | ResolvedMedia> {
     const cleanSrc = src.split(/[?#]/)[0];
     const isVideo = VIDEO_EXT.test(cleanSrc);
     const source = await loadContentSource(
@@ -69,7 +93,9 @@ export class ImageStore {
     const hash = createHash("sha256").update(source).digest("hex");
     if (isVideo) {
       const resolved = await this.storeVideo(source, hash, cleanSrc, src);
-      this.resolved.set(key, resolved);
+      if (typeof resolved !== "string") {
+        this.resolved.set(key, resolved);
+      }
       return resolved;
     }
 
@@ -124,12 +150,13 @@ export class ImageStore {
       // not cached yet
     }
 
+    const nonce = randomBytes(6).toString("hex");
     const input = path.join(
       this.mediaDir,
-      `.src-${hash}${path.extname(cleanSrc) || ".mp4"}`,
+      `.src-${hash}-${nonce}${path.extname(cleanSrc) || ".mp4"}`,
     );
-    const webmTmp = path.join(this.mediaDir, `.tmp-${hash}.webm`);
-    const mp4Tmp = path.join(this.mediaDir, `.tmp-${hash}.mp4`);
+    const webmTmp = path.join(this.mediaDir, `.tmp-${hash}-${nonce}.webm`);
+    const mp4Tmp = path.join(this.mediaDir, `.tmp-${hash}-${nonce}.mp4`);
 
     try {
       await mkdir(this.mediaDir, { recursive: true });
