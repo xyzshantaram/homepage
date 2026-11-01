@@ -17,6 +17,7 @@ import {
   AdminApiRoute,
   AdminPageRoute,
   OrphanedMediaRoute,
+  RebuildPostRoute,
   ChallengeRoute,
   CommentRoute,
   CspReportRoute,
@@ -74,6 +75,7 @@ export function createApp(config: Config, adminName?: string) {
   app.get(...AdminPageRoute(deps));
   app.post(...AdminApiRoute(deps));
   app.get(...OrphanedMediaRoute(deps));
+  app.post(...RebuildPostRoute(deps));
 
   for (const route of PageRoutes(deps)) {
     app.get(...route);

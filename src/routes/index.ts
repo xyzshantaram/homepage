@@ -3,6 +3,7 @@ export {
   AdminPageRoute,
   OrphanedMediaRoute,
   PostsWebhookRoute,
+  RebuildPostRoute,
 } from "./admin";
 export { ChallengeRoute, RedeemRoute } from "./captcha";
 export { HomeRoute } from "./home";

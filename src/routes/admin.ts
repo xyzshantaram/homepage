@@ -260,6 +260,50 @@ export function AdminPageRoute(deps: Deps): Route {
   ];
 }
 
+export function RebuildPostRoute(deps: Deps): Route {
+  return [
+    "/api/v1/admin/rebuild",
+    async (c: Context) => {
+      const session = sessionFromRequest(c, deps.admin);
+      if (!session) {
+        return c.json({ success: false, error: { code: "Unauthorized" } }, 401);
+      }
+
+      const payload = c.req
+        .header("content-type")
+        ?.includes("application/json")
+        ? await c.req.json().catch(() => null)
+        : null;
+      const requested =
+        typeof payload?.url === "string"
+          ? payload.url
+          : new URL(c.req.url).searchParams.get("url");
+
+      let pathname: string;
+      try {
+        pathname = new URL(requested ?? "", "http://localhost").pathname;
+      } catch {
+        pathname = "";
+      }
+
+      const parts = pathname.match(/^\/posts\/(\d{4})\/(\d{2})\/([^/]+)$/);
+      if (!parts) {
+        return c.json({ success: false, error: { code: "InvalidUrl" } }, 400);
+      }
+
+      const post = await deps.posts.get(parts[1], parts[2], parts[3]);
+      if (!post) {
+        return c.json({ success: false, error: { code: "NotFound" } }, 404);
+      }
+
+      deps.images.forget();
+      deps.posts.invalidate?.();
+      const html = await deps.posts.render(post);
+      return c.json({ success: true, url: post.url, bytes: html.length });
+    },
+  ];
+}
+
 export function OrphanedMediaRoute(deps: Deps): Route {
   return [
     "/api/v1/admin/orphaned-media",

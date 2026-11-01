@@ -179,6 +179,19 @@ describe("admin routes", () => {
     );
     expect(anonymousOrphaned.status).toBe(401);
 
+    const rebuild = await app.request("/api/v1/admin/rebuild", {
+      method: "POST",
+      headers: { cookie, "content-type": "application/json" },
+      body: JSON.stringify({ url: "/posts/2024/01/post-0" }),
+    });
+    expect(rebuild.status).toBe(200);
+    expect((await rebuild.json()).success).toBe(true);
+
+    const anonymousRebuild = await app.request("/api/v1/admin/rebuild", {
+      method: "POST",
+    });
+    expect(anonymousRebuild.status).toBe(401);
+
     const page2 = await app.request("/admin?page=2", { headers: { cookie } });
     const html2 = await page2.text();
     expect(occurrences(html2, 'class="comment surface"')).toBe(6);

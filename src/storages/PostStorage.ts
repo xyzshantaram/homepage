@@ -55,6 +55,10 @@ export class FilePostStorage implements PostStorage {
     this.cache = undefined;
   }
 
+  invalidate(): void {
+    this.cache = undefined;
+  }
+
   private async load(): Promise<Map<string, CachedPost>> {
     if (this.cache) {
       return this.cache;

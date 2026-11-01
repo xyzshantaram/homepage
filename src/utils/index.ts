@@ -78,6 +78,7 @@ export interface PostStorage {
   render(post: Post): Promise<string>;
   resolveComponents(post: Post): Promise<string[]>;
   refresh?(): Promise<void>;
+  invalidate?(): void;
 }
 
 export type Comment = {
