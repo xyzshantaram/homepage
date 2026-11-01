@@ -1,5 +1,6 @@
 import MarkdownIt from "markdown-it";
 import footnote from "markdown-it-footnote";
+import smartypants from "markdown-it-smartypants";
 import { escape } from "lodash";
 
 export type ResolvedMedia =
@@ -9,7 +10,12 @@ export type ResolvedMedia =
 export type ImageResolver = (src: string) => Promise<ResolvedMedia>;
 
 function createMarkdown(html: boolean) {
-  const markdown = new MarkdownIt({ html, linkify: true }).use(footnote);
+  const markdown = new MarkdownIt({ html, linkify: true, typographer: true })
+    .use(footnote)
+    .use(smartypants, {
+      "Straight-CurlyQuote": false,
+      "Halfwidth-FullwidthCurlyQuote": false,
+    });
 
   const isImageOnly = (inline: any): boolean => {
     if (inline?.type !== "inline" || !inline.children?.length) {

@@ -121,6 +121,23 @@ describe("FilePostStorage", () => {
     expect(html).toContain('class="table-wrapper"');
     expect(html).toContain("footnote-ref");
   });
+
+  test("converts dashes, ellipses, and quotes", async () => {
+    writePost(root, {
+      file: "typography.md",
+      title: "Typography",
+      date: "2024-05-06",
+      body: '"Quoted" plain -- en --- em... and `--flag`\n',
+    });
+
+    const storage = new FilePostStorage(path.join(root, "posts"));
+    const post = await storage.get("2024", "05", "typography");
+    const html = await storage.render(post!);
+
+    expect(html).toContain("\u201cQuoted\u201d");
+    expect(html).toContain("plain \u2013 en \u2014 em\u2026 and");
+    expect(html).toContain("<code>--flag</code>");
+  });
 });
 
 describe("post routes", () => {
