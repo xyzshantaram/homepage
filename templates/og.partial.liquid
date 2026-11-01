@@ -1,0 +1,9 @@
+<meta property="og:type" content="{{ ogType | default: "website" }}" />
+<meta property="og:title" content="{{ ogTitle | escape }}" />
+{% if ogDescription %}<meta property="og:description" content="{{ ogDescription | escape }}" />
+{% endif %}<meta property="og:url" content="{{ ogUrl | escape }}" />
+<meta property="og:site_name" content="shantaram.xyz" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="{{ ogTitle | escape }}" />
+{% if ogDescription %}<meta name="twitter:description" content="{{ ogDescription | escape }}" />
+{% endif %}

@@ -223,6 +223,18 @@ describe("post routes", () => {
     expect(occurrences(unknown, 'class="post-item surface"')).toBe(25);
   });
 
+  test("renders open graph metadata for a post", async () => {
+    const html = await (await app().request("/posts/2024/01/post-0")).text();
+    expect(html).toContain('<meta property="og:type" content="article" />');
+    expect(html).toContain('<meta property="og:title" content="Post 0" />');
+    expect(html).toContain(
+      '<meta property="og:description" content="Body 0" />',
+    );
+    expect(html).toContain(
+      '<meta property="og:url" content="http://localhost/posts/2024/01/post-0" />',
+    );
+  });
+
   test("renders visible posts and 404s hidden ones", async () => {
     const visible = await app().request("/posts/2024/01/post-0");
     const hidden = await app().request("/posts/2024/02/hidden");

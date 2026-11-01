@@ -66,6 +66,7 @@ export function PostsRoute(deps: Deps): Route {
           prevUrl: page > 1 ? urlFor(selected, page - 1) : null,
           nextUrl: page < pages ? urlFor(selected, page + 1) : null,
           admin,
+          ogUrl: `${deps.config.siteUrl}/posts`,
         }),
       );
     },
@@ -98,6 +99,7 @@ export function PostRoute(deps: Deps): Route {
       return c.html(
         await deps.liquid.renderFile("post.liquid", {
           ...post,
+          ogUrl: `${deps.config.siteUrl}${post.url}`,
           components,
           body,
           comments,

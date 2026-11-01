@@ -27,6 +27,7 @@ export function PageRoutes(deps: Deps): Route[] {
     return c.html(
       await deps.liquid.renderFile("page.liquid", {
         ...entry,
+        ogUrl: `${deps.config.siteUrl}/${slug}`,
         components,
         body,
         admin,

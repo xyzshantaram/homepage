@@ -13,6 +13,7 @@ export function HomeRoute(deps: Deps): Route {
           posts: visible.slice(0, HOME_POST_COUNT),
           admin,
           home: true,
+          ogUrl: `${deps.config.siteUrl}/`,
         }),
       );
     },

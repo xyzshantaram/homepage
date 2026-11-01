@@ -1,6 +1,10 @@
 {% layout "base.liquid" %}
 {% block title %}shan's corner{% endblock %}
 
+{% block head %}
+{% render "og.partial.liquid", ogTitle: "shan's corner", ogDescription: "Maker and storyteller with 4+ years of full-stack web development.", ogUrl: ogUrl %}
+{% endblock %}
+
 {% block content %}
 <h1>Hello</h1>
 

@@ -160,6 +160,18 @@ describe("page routes", () => {
     expect(services).toContain("<services-estimate></services-estimate>");
   });
 
+  test("renders open graph metadata", async () => {
+    const html = await (await app().request("/services")).text();
+    expect(html).toContain('<meta property="og:title" content="Services" />');
+    expect(html).toContain(
+      '<meta property="og:url" content="http://localhost/services" />',
+    );
+    expect(html).toContain(
+      '<meta property="og:site_name" content="shantaram.xyz" />',
+    );
+    expect(html).toContain('<meta name="twitter:card" content="summary" />');
+  });
+
   test("serves static files under /static", async () => {
     expect((await app().request("/static/index.css")).status).toBe(200);
     expect((await app().request("/index.css")).status).toBe(404);

@@ -1,6 +1,10 @@
 {% layout "base.liquid" %}
 {% block title %}shantaram.xyz | {{ title | escape }}{% endblock %}
 
+{% block head %}
+{% render "og.partial.liquid", ogTitle: title, ogDescription: description, ogUrl: ogUrl, ogType: "article" %}
+{% endblock %}
+
 {% block content %}
 <h1>{{ title | escape }}</h1>
 <p class="cta"><a href="/posts" class="muted">Back to posts</a></p>

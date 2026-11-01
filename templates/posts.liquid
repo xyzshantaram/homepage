@@ -1,6 +1,10 @@
 {% layout "base.liquid" %}
 {% block title %}shantaram.xyz | Posts{% endblock %}
 
+{% block head %}
+{% render "og.partial.liquid", ogTitle: "Posts", ogDescription: "Musings from shantaram.", ogUrl: ogUrl %}
+{% endblock %}
+
 {% block content %}
 <div class="post-heading-wrapper">
   <h1>Posts</h1>
