@@ -208,25 +208,18 @@ Conversely, why are we still coding like it's 1980?
 formula has not changed, but the underlying system it operates on - _the world_,
 has changed dramatically.
 
-Why is code so top-to-bottom, left-to-right? It's the C illusion all over again.
-We are programming for a machine that no longer exists. Today's software is 
-distributed and highly scaled. Even the complexity hiding inside my Arch Linux
-desktop would take anyone years to understand. We should stop pretending like 
-it's a sequence of steps or some kind of flat algorithm. Our languages assume
-sequential execution and organization, and perhaps more damningly, our workflows
-assume a one-size-fits-all approach to software engineering. LLMs are very good
-at translating text - why can't we translate thoughts between humans?
+Why is code still so top-to-bottom, left-to-right? It's the C illusion all over 
+again. We're programming for a machine that no longer exists. Today's software 
+is distributed, highly scaled, and composed of layers of complexity that no 
+single person could reasonably hold in their head. Even understanding the 
+complexity hiding inside my Arch Linux desktop would take years.
+
+Yet our languages, tools, and workflows still encourage us to think of software
+as a sequence of instructions. We keep trying to flatten something inherently 
+multidimensional into a representation that machines can execute. Text used to
+be the cheapest form for that - but now we can make coding tactile.
 
 ![The whiteboard this post arose from -- my thoughts as a spatial workspace](../images/making-coding-fun-again/whiteboard.png)
-
-This was not the future that Alan Kay (Dynabook, Smalltalk), Bill Atkinson 
-(HyperCard), or even Terry A. Davis (DolDoc) imagined for us. We can have 
-software that fits people! Everyday people should be able to apply technology
-to their own problems instead of waiting for Silicon Valley to fix it for them.
-
-We finally have the technical capabilities to build software that fits around 
-how people think! Especially with LLMs, which can be used to simulate any 
-experience as long as it can be represented as text.
 
 **Tip**: When prototyping UI, try drawing a sketch in Excalidraw and pasting it 
 into your coding agent. We no longer have to think in terms of Tailwind classes 
@@ -236,13 +229,21 @@ This is how I built [Next Steps](https://trythursday.org/experiments/next-steps)
 
 ![The Excalidraw mockup I used to build Next Steps](../images/making-coding-fun-again/next-steps-mockup.png)
 
+The future we are living now was not the one that Alan Kay (Dynabook, 
+Smalltalk), Bill Atkinson (HyperCard), or even Terry A. Davis (DolDoc) imagined 
+for us. We can have software that fits people! 
+
+Everyday people should be able to apply technology to their own problems instead
+of waiting for Silicon Valley to fix it for them.
+
 Us engineers have always looked down on UI/UX designers - but those guys were 
 doing it right all along, and it's our jobs that are at risk now.
 
 We are going to see a new generation of thinkers and designers come into their 
 own with AI. These people have always been blocked off from coding because of 
 the learning curve involved, but now they can think in whatever way feels right,
-and let the AI take care of the implementation.
+and let the AI take care of the implementation. LLMs are very good at 
+translating text - why can't we translate thoughts between humans?
 
 I am not saying that this is about whiteboarding or UI mockups. I am saying that
 for far too long, we have been trying to force human thinking into something a
@@ -314,6 +315,9 @@ too.
 It's basically replaced whatever I was previously using Deno+`zx` for, which 
 themselves replaced `bash`+`python` - now I can write everything in TypeScript.
 This site you're reading now is compiled/served by Bun, too.
+
+I think the lesson here is: challenge everything. Trust no one. Make your own
+decisions for your own workflows.
 
 ## Vibe coding used to be fun
 
